@@ -1,6 +1,6 @@
 package library.geometry;
 
-import testbed.Camera;
+// import testbed.Camera;
 import library.collision.AABB;
 import library.math.Vectors2D;
 import testbed.ColourSettings;
@@ -150,32 +150,32 @@ public class Polygon extends Shapes {
      * @param paintSettings Colour settings to draw the objects to screen with
      * @param camera        Camera class used to convert points from world space to view space
      */
-    @Override
-    public void draw(Graphics2D g, ColourSettings paintSettings, Camera camera) {
-        Path2D.Double s = new Path2D.Double();
-        for (int i = 0; i < vertices.length; i++) {
-            Vectors2D v = new Vectors2D(this.vertices[i]);
-            orient.mul(v);
-            v.add(body.position);
-            v = camera.convertToScreen(v);
-            if (i == 0) {
-                s.moveTo(v.x, v.y);
-            } else {
-                s.lineTo(v.x, v.y);
-            }
-        }
-        s.closePath();
-        if (body.mass == 0.0) {
-            g.setColor(paintSettings.staticFill);
-            g.fill(s);
-            g.setColor(paintSettings.staticOutLine);
-        } else {
-            g.setColor(paintSettings.shapeFill);
-            g.fill(s);
-            g.setColor(paintSettings.shapeOutLine);
-        }
-        g.draw(s);
-    }
+    // @Override
+    // public void draw(Graphics2D g, ColourSettings paintSettings, Camera camera) {
+    //     Path2D.Double s = new Path2D.Double();
+    //     for (int i = 0; i < vertices.length; i++) {
+    //         Vectors2D v = new Vectors2D(this.vertices[i]);
+    //         orient.mul(v);
+    //         v.add(body.position);
+    //         v = camera.convertToScreen(v);
+    //         if (i == 0) {
+    //             s.moveTo(v.x, v.y);
+    //         } else {
+    //             s.lineTo(v.x, v.y);
+    //         }
+    //     }
+    //     s.closePath();
+    //     if (body.mass == 0.0) {
+    //         g.setColor(paintSettings.staticFill);
+    //         g.fill(s);
+    //         g.setColor(paintSettings.staticOutLine);
+    //     } else {
+    //         g.setColor(paintSettings.shapeFill);
+    //         g.fill(s);
+    //         g.setColor(paintSettings.shapeOutLine);
+    //     }
+    //     g.draw(s);
+    // }
 
     /**
      * Generates a convex hull around the vertices supplied.
