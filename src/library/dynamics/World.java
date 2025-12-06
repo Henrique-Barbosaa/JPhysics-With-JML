@@ -5,7 +5,7 @@ import library.collision.Arbiter;
 import library.joints.Joint;
 import library.math.Vectors2D;
 import testbed.ColourSettings;
-import testbed.Camera;
+// import testbed.Camera;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -266,23 +266,23 @@ public class World {
      * @param paintSettings Colour settings to draw the objects to screen with
      * @param camera        Camera class used to convert points from world space to view space
      */
-    public void drawContact(Graphics2D g, ColourSettings paintSettings, Camera camera) {
-        for (Arbiter contact : contacts) {
-            Vectors2D point = contact.contacts[0];
-            Vectors2D line;
-            Vectors2D beginningOfLine;
-            Vectors2D endOfLine;
+    // public void drawContact(Graphics2D g, ColourSettings paintSettings, Camera camera) {
+    //     for (Arbiter contact : contacts) {
+    //         Vectors2D point = contact.contacts[0];
+    //         Vectors2D line;
+    //         Vectors2D beginningOfLine;
+    //         Vectors2D endOfLine;
 
-            g.setColor(paintSettings.contactPoint);
-            line = contact.contactNormal.normal().scalar(paintSettings.TANGENT_LINE_SCALAR);
-            beginningOfLine = camera.convertToScreen(point.addi(line));
-            endOfLine = camera.convertToScreen(point.subtract(line));
-            g.draw(new Line2D.Double(beginningOfLine.x, beginningOfLine.y, endOfLine.x, endOfLine.y));
+    //         g.setColor(paintSettings.contactPoint);
+    //         line = contact.contactNormal.normal().scalar(paintSettings.TANGENT_LINE_SCALAR);
+    //         beginningOfLine = camera.convertToScreen(point.addi(line));
+    //         endOfLine = camera.convertToScreen(point.subtract(line));
+    //         g.draw(new Line2D.Double(beginningOfLine.x, beginningOfLine.y, endOfLine.x, endOfLine.y));
 
-            line = contact.contactNormal.scalar(paintSettings.NORMAL_LINE_SCALAR);
-            beginningOfLine = camera.convertToScreen(point.addi(line));
-            endOfLine = camera.convertToScreen(point.subtract(line));
-            g.draw(new Line2D.Double(beginningOfLine.x, beginningOfLine.y, endOfLine.x, endOfLine.y));
-        }
-    }
+    //         line = contact.contactNormal.scalar(paintSettings.NORMAL_LINE_SCALAR);
+    //         beginningOfLine = camera.convertToScreen(point.addi(line));
+    //         endOfLine = camera.convertToScreen(point.subtract(line));
+    //         g.draw(new Line2D.Double(beginningOfLine.x, beginningOfLine.y, endOfLine.x, endOfLine.y));
+    //     }
+    // }
 }
