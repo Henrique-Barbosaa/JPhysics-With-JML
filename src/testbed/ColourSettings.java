@@ -97,7 +97,7 @@ public class ColourSettings {
     public Color rayToBody;
     public Color projectedRay;
     public Color scatterRays;
-    public final double RAY_DOT = 2;
+    public final double RAY_DOT = 2.0;
     public final Color shadow = new Color(128, 128, 128, 126);
 
 
