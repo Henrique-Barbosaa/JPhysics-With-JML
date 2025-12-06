@@ -185,20 +185,20 @@ public class Ray {
      * @param paintSettings Colour settings to draw the objects to screen with
      * @param camera        Camera class used to convert points from world space to view space
      */
-    public void draw(Graphics2D g, ColourSettings paintSettings, Camera camera) {
-        g.setColor(paintSettings.projectedRay);
-        Vectors2D epicenter = camera.convertToScreen(startPoint);
-        Vectors2D endPoint = camera.convertToScreen(direction.scalar(distance).addi(startPoint));
-        g.draw(new Line2D.Double(epicenter.x, epicenter.y, endPoint.x, endPoint.y));
+    // public void draw(Graphics2D g, ColourSettings paintSettings, Camera camera) {
+    //     g.setColor(paintSettings.projectedRay);
+    //     Vectors2D epicenter = camera.convertToScreen(startPoint);
+    //     Vectors2D endPoint = camera.convertToScreen(direction.scalar(distance).addi(startPoint));
+    //     g.draw(new Line2D.Double(epicenter.x, epicenter.y, endPoint.x, endPoint.y));
 
-        g.setColor(paintSettings.rayToBody);
-        if (intersectingBodiesInfo != null) {
-            Vectors2D intersection = camera.convertToScreen(intersectingBodiesInfo.getCoord());
-            g.draw(new Line2D.Double(epicenter.x, epicenter.y, intersection.x, intersection.y));
+    //     g.setColor(paintSettings.rayToBody);
+    //     if (intersectingBodiesInfo != null) {
+    //         Vectors2D intersection = camera.convertToScreen(intersectingBodiesInfo.getCoord());
+    //         g.draw(new Line2D.Double(epicenter.x, epicenter.y, intersection.x, intersection.y));
 
-            double circleRadius = camera.scaleToScreenXValue(paintSettings.RAY_DOT);
-            g.fill(new Ellipse2D.Double(intersection.x - circleRadius, intersection.y - circleRadius, 2.0 * circleRadius, 2.0 * circleRadius));
-        }
-    }
+    //         double circleRadius = camera.scaleToScreenXValue(paintSettings.RAY_DOT);
+    //         g.fill(new Ellipse2D.Double(intersection.x - circleRadius, intersection.y - circleRadius, 2.0 * circleRadius, 2.0 * circleRadius));
+    //     }
+    // }
 }
 

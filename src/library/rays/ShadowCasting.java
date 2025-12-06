@@ -97,27 +97,27 @@ public class ShadowCasting {
      * @param paintSettings Colour settings to draw the objects to screen with
      * @param camera        Camera class used to convert points from world space to view space
      */
-    public void draw(Graphics2D g, ColourSettings paintSettings, Camera camera) {
-        for (int i = 0; i < rayData.size(); i++) {
-            Ray ray1 = rayData.get(i).getRAY();
-            Ray ray2 = rayData.get(i + 1 == rayData.size() ? 0 : i + 1).getRAY();
-            g.setColor(paintSettings.shadow);
+    // public void draw(Graphics2D g, ColourSettings paintSettings, Camera camera) {
+    //     for (int i = 0; i < rayData.size(); i++) {
+    //         Ray ray1 = rayData.get(i).getRAY();
+    //         Ray ray2 = rayData.get(i + 1 == rayData.size() ? 0 : i + 1).getRAY();
+    //         g.setColor(paintSettings.shadow);
 
-            Path2D.Double s = new Path2D.Double();
-            Vectors2D worldStartPoint = camera.convertToScreen(startPoint);
-            s.moveTo(worldStartPoint.x, worldStartPoint.y);
-            if (ray1.getRayInformation() != null) {
-                Vectors2D point1 = camera.convertToScreen(ray1.getRayInformation().getCoord());
-                s.lineTo(point1.x, point1.y);
-            }
-            if (ray2.getRayInformation() != null) {
-                Vectors2D point2 = camera.convertToScreen(ray2.getRayInformation().getCoord());
-                s.lineTo(point2.x, point2.y);
-            }
-            s.closePath();
-            g.fill(s);
-        }
-    }
+    //         Path2D.Double s = new Path2D.Double();
+    //         Vectors2D worldStartPoint = camera.convertToScreen(startPoint);
+    //         s.moveTo(worldStartPoint.x, worldStartPoint.y);
+    //         if (ray1.getRayInformation() != null) {
+    //             Vectors2D point1 = camera.convertToScreen(ray1.getRayInformation().getCoord());
+    //             s.lineTo(point1.x, point1.y);
+    //         }
+    //         if (ray2.getRayInformation() != null) {
+    //             Vectors2D point2 = camera.convertToScreen(ray2.getRayInformation().getCoord());
+    //             s.lineTo(point2.x, point2.y);
+    //         }
+    //         s.closePath();
+    //         g.fill(s);
+    //     }
+    // }
 
     /**
      * Getter for number of rays projected.

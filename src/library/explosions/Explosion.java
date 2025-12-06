@@ -26,7 +26,7 @@ public interface Explosion {
      * @param paintSettings Colour settings to draw the objects to screen with
      * @param camera        Camera class used to convert points from world space to view space
      */
-    void draw(Graphics2D g, ColourSettings paintSettings, Camera camera);
+    // void draw(Graphics2D g, ColourSettings paintSettings, Camera camera);
 
     /**
      * Updates the arraylist to reevaluate what objects are effected/within the proximity.

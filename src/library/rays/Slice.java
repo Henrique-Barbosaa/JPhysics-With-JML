@@ -211,21 +211,21 @@ public class Slice {
      * @param paintSettings Colour settings to draw the objects to screen with
      * @param camera        Camera class used to convert points from world space to view space
      */
-    public void draw(Graphics2D g, ColourSettings paintSettings, Camera camera) {
-        g.setColor(paintSettings.projectedRay);
-        Vectors2D epicenter = camera.convertToScreen(startPoint);
-        Vectors2D endPoint = camera.convertToScreen(direction.scalar(distance).addi(startPoint));
-        g.draw(new Line2D.Double(epicenter.x, epicenter.y, endPoint.x, endPoint.y));
+    // public void draw(Graphics2D g, ColourSettings paintSettings, Camera camera) {
+    //     g.setColor(paintSettings.projectedRay);
+    //     Vectors2D epicenter = camera.convertToScreen(startPoint);
+    //     Vectors2D endPoint = camera.convertToScreen(direction.scalar(distance).addi(startPoint));
+    //     g.draw(new Line2D.Double(epicenter.x, epicenter.y, endPoint.x, endPoint.y));
 
-        g.setColor(paintSettings.rayToBody);
-        for (int i = 0; i < intersectingBodiesInfo.size(); i++) {
-            if ((i + 1) % 2 == 0) {
-                Vectors2D intersection1 = camera.convertToScreen(intersectingBodiesInfo.get(i - 1).getCoord());
-                Vectors2D intersection2 = camera.convertToScreen(intersectingBodiesInfo.get(i).getCoord());
-                g.draw(new Line2D.Double(intersection2.x, intersection2.y, intersection1.x, intersection1.y));
-            }
-        }
-    }
+    //     g.setColor(paintSettings.rayToBody);
+    //     for (int i = 0; i < intersectingBodiesInfo.size(); i++) {
+    //         if ((i + 1) % 2 == 0) {
+    //             Vectors2D intersection1 = camera.convertToScreen(intersectingBodiesInfo.get(i - 1).getCoord());
+    //             Vectors2D intersection2 = camera.convertToScreen(intersectingBodiesInfo.get(i).getCoord());
+    //             g.draw(new Line2D.Double(intersection2.x, intersection2.y, intersection1.x, intersection1.y));
+    //         }
+    //     }
+    // }
 
     /**
      * Sets the direction of the ray to a different value.

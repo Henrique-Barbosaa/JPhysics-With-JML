@@ -75,23 +75,23 @@ public class ProximityExplosion implements Explosion {
      * @param paintSettings Colour settings to draw the objects to screen with
      * @param camera        Camera class used to convert points from world space to view space
      */
-    @Override
-    public void draw(Graphics2D g, ColourSettings paintSettings, Camera camera) {
-        g.setColor(paintSettings.proximity);
-        Vectors2D circlePotion = camera.convertToScreen(epicentre);
-        double proximityRadius = camera.scaleToScreenXValue(proximity);
-        g.draw(new Ellipse2D.Double(circlePotion.x - proximityRadius, circlePotion.y - proximityRadius, 2 * proximityRadius, 2 * proximityRadius));
+    // @Override
+    // public void draw(Graphics2D g, ColourSettings paintSettings, Camera camera) {
+    //     g.setColor(paintSettings.proximity);
+    //     Vectors2D circlePotion = camera.convertToScreen(epicentre);
+    //     double proximityRadius = camera.scaleToScreenXValue(proximity);
+    //     g.draw(new Ellipse2D.Double(circlePotion.x - proximityRadius, circlePotion.y - proximityRadius, 2 * proximityRadius, 2 * proximityRadius));
 
-        updateLinesToBody();
-        for (Vectors2D p : linesToBodies) {
-            g.setColor(paintSettings.linesToObjects);
-            Vectors2D worldCoord = camera.convertToScreen(p);
-            g.draw(new Line2D.Double(circlePotion.x, circlePotion.y, worldCoord.x, worldCoord.y));
+    //     updateLinesToBody();
+    //     for (Vectors2D p : linesToBodies) {
+    //         g.setColor(paintSettings.linesToObjects);
+    //         Vectors2D worldCoord = camera.convertToScreen(p);
+    //         g.draw(new Line2D.Double(circlePotion.x, circlePotion.y, worldCoord.x, worldCoord.y));
 
-            double lineToRadius = camera.scaleToScreenXValue(paintSettings.CIRCLE_RADIUS);
-            g.fill(new Ellipse2D.Double(worldCoord.x - lineToRadius, worldCoord.y - lineToRadius, 2 * lineToRadius, 2 * lineToRadius));
-        }
-    }
+    //         double lineToRadius = camera.scaleToScreenXValue(paintSettings.CIRCLE_RADIUS);
+    //         g.fill(new Ellipse2D.Double(worldCoord.x - lineToRadius, worldCoord.y - lineToRadius, 2 * lineToRadius, 2 * lineToRadius));
+    //     }
+    // }
 
     /**
      * Applies blast impulse to all effected bodies centre of mass.

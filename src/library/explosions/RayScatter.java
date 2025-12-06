@@ -84,11 +84,11 @@ public class RayScatter {
      * @param paintSettings Colour settings to draw the objects to screen with
      * @param camera        Camera class used to convert points from world space to view space
      */
-    public void draw(Graphics2D g, ColourSettings paintSettings, Camera camera) {
-        for (Ray ray : rays) {
-            ray.draw(g, paintSettings, camera);
-        }
-    }
+    // public void draw(Graphics2D g, ColourSettings paintSettings, Camera camera) {
+    //     for (Ray ray : rays) {
+    //         ray.draw(g, paintSettings, camera);
+    //     }
+    // }
 
     /**
      * Getter for rays.

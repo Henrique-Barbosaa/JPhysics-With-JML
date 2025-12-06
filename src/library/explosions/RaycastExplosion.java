@@ -86,9 +86,9 @@ public class RaycastExplosion implements Explosion {
      * @param paintSettings Colour settings to draw the objects to screen with
      * @param camera        Camera class used to convert points from world space to view space
      */
-    @Override
-    public void draw(Graphics2D g, ColourSettings paintSettings, Camera camera) {
-        rayScatter.draw(g, paintSettings, camera);
-    }
+    // @Override
+    // public void draw(Graphics2D g, ColourSettings paintSettings, Camera camera) {
+    //     rayScatter.draw(g, paintSettings, camera);
+    // }
 }
 
