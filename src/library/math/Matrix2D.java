@@ -99,21 +99,20 @@ public class Matrix2D {
     }
 
     /*@ public normal_behavior
+      @   requires v != null;
+      @   requires v != row1;
+      @   requires v != row2;
+      @   assignable v.x, v.y;
       @   requires Double.isFinite(row1.x);
       @   requires Double.isFinite(row1.y);
       @   requires Double.isFinite(row2.x);
       @   requires Double.isFinite(row2.y);
       @   requires Double.isFinite(v.x*row1.x + v.y*row1.y);
       @   requires Double.isFinite(v.x*row2.x + v.y*row2.y);
-      @   ensures \result.x == \old(v.x)*row1.x + \old(v.y)*row1.y;
-      @   ensures \result.y == \old(v.x)*row2.x + \old(v.y)*row2.y;
+      @   ensures \result.x == \old(row1.x * v.x + row1.y * v.y);
+      @   ensures \result.y == \old(row2.x * v.x + row2.y * v.y);
       @   ensures \result == v;
       @*/
-    //ajeitar isso
-    //@skipesc
-    //Tanto esse quanto o próximo absolutamente recusam
-    //aceitar @   ensures \result.x == \old(v.x)*row1.x+\old(v.y)*row1.y;
-    //além disso por algum motivo esses métodos travam o openjml com força
     public Vectors2D mul(Vectors2D v) {
         double x = v.x;
         double y = v.y;
@@ -124,19 +123,25 @@ public class Matrix2D {
 
 
     /*@ public normal_behavior
+      @   assigns out.x, out.y;
+      @   requires v != null;
+      @   requires out != null;
+      @
+      @   requires out != row1;
+      @   requires out != row2;
+      @   requires v != out;
+      @
       @   requires Double.isFinite(row1.x);
       @   requires Double.isFinite(row1.y);
       @   requires Double.isFinite(row2.x);
       @   requires Double.isFinite(row2.y);
       @   requires Double.isFinite((row1.x * v.x) + (row1.y * v.y));
       @   requires Double.isFinite((row2.x * v.x) + (row2.y * v.y));
+      @
       @   ensures out.x == (row1.x * v.x) + (row1.y * v.y);
       @   ensures \result.y == (row2.x * v.x) + (row2.y * v.y);
       @   ensures \result == out;
       @*/
-    //veja o de cima.
-    //ajeitar isso
-    //@skipesc
     public Vectors2D mul(Vectors2D v, Vectors2D out) {
         out.x = row1.x * v.x + row1.y * v.y;
         out.y = row2.x * v.x + row2.y * v.y;
