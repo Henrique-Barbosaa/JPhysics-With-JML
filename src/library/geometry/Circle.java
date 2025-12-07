@@ -55,8 +55,12 @@ public class Circle extends Shapes {
     /**
      * Generates an AABB and binds it to the body.
      */
-    /*@ also
-      @ ensures body.aabb != null;
+    /*@ also public normal_behavior
+      @   requires body != null;
+      @   assigns body.aabb, body.aabb.*;
+      @   ensures body.aabb != null;
+      @   ensures body.aabb.min != null;
+      @   ensures body.aabb.max != null;
       @*/
     @Override
     public void createAABB() {
