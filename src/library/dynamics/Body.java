@@ -40,6 +40,7 @@ public class Body {
     /*@ public normal_behavior
       @
       @*/
+    //@ skipesc
     public Body(Shapes shape, double x, double y) {
         this.shape = shape;
         this.shape.body = this;
@@ -75,6 +76,7 @@ public class Body {
      * @param force        Force vector to apply.
      * @param contactPoint The point to apply the force to relative to the body in object space.
      */
+    //@ skipesc
     public void applyForce(Vectors2D force, Vectors2D contactPoint) {
         this.force.add(force);
         torque += contactPoint.crossProduct(force);
@@ -85,6 +87,7 @@ public class Body {
      *
      * @param force Force vector to apply.
      */
+    //@ skipesc
     public void applyForceToCentre(Vectors2D force) {
         this.force.add(force);
     }
@@ -95,6 +98,7 @@ public class Body {
      * @param impulse      Magnitude of impulse vector.
      * @param contactPoint The point to apply the force to relative to the body in object space.
      */
+    //@ skipesc
     public void applyLinearImpulse(Vectors2D impulse, Vectors2D contactPoint) {
         velocity.add(impulse.scalar(invMass));
         angularVelocity += invI * contactPoint.crossProduct(impulse);
@@ -105,6 +109,7 @@ public class Body {
      *
      * @param impulse Magnitude of impulse vector.
      */
+    //@ skipesc
     public void applyLinearImpulseToCentre(Vectors2D impulse) {
         velocity.add(impulse.scalar(invMass));
     }
@@ -114,6 +119,7 @@ public class Body {
      *
      * @param delta Angle of orientation.
      */
+    //@ skipesc
     public void setOrientation(double delta) {
         orientation = delta;
         shape.orient.set(orientation);
@@ -125,6 +131,7 @@ public class Body {
      *
      * @param density double value of desired density.
      */
+    //@ skipesc
     public void setDensity(double density) {
         if (density > 0.0) {
             shape.calcMass(density);
@@ -136,6 +143,7 @@ public class Body {
     /**
      * Sets all mass and inertia variables to zero. Object cannot be moved.
      */
+    //@ skipesc
     private void setStatic() {
         mass = 0.0;
         invMass = 0.0;

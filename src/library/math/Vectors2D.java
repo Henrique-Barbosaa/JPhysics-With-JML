@@ -126,6 +126,7 @@ public class Vectors2D {
       @   ensures \result instanceof Vectors2D;
       @   ensures \result.x == this.x;
       @   ensures \result.y == this.y;
+      @   ensures \fresh(\result);
       @   spec_pure
       @*/
     //@skipesc
@@ -178,11 +179,14 @@ public class Vectors2D {
       @   requires v != null;
       @   requires Double.isFinite(v.x);
       @   requires Double.isFinite(v.y);
+      @   requires Double.isFinite(x + v.x);
+      @   requires Double.isFinite(y + v.y);
       @   ensures \result.x == \old(x) + \old(v.x);
       @   ensures \result.y == \old(y) + \old(v.y);
       @   ensures \result == this;
+      @   ensures Double.isFinite(\result.x);
+      @   ensures Double.isFinite(\result.y);
       @*/
-    //@skipesc
     public Vectors2D add(Vectors2D v) {
         this.x = x + v.x;
         this.y = y + v.y;
