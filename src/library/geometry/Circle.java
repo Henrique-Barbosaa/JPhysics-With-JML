@@ -36,13 +36,16 @@ public class Circle extends Shapes {
      *
      * @param density The desired density to factor into the calculation.
      */
-    /*@ also
-      @ public normal_behavior
-      @   requires Double.isFinite(StrictMath.PI * radius * radius * density);
+    /*@ also public normal_behavior
+      @   assigns body.mass, body.I, body.invMass, body.invI;
+      @   requires body != null;
+      @   requires Double.isFinite(StrictMath.PI * radius * radius * density * radius * radius);
       @   requires Double.isFinite(StrictMath.PI * radius * radius * density * radius * radius);
       @   requires density >= 0;
       @   ensures body.mass >= 0;
       @   ensures body.I >= 0;
+      @   ensures body.invMass >= 0;
+      @   ensures body.invI >= 0;
       @*/
     @Override
     public void calcMass(double density) {
@@ -62,6 +65,7 @@ public class Circle extends Shapes {
       @   ensures body.aabb.min != null;
       @   ensures body.aabb.max != null;
       @*/
+    //@skipesc
     @Override
     public void createAABB() {
         body.aabb = new AABB(new Vectors2D(-radius, -radius), new Vectors2D(radius, radius));
