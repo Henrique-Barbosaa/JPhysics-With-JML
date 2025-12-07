@@ -14,12 +14,19 @@ import java.awt.geom.Path2D;
  * Abstract class presenting a geometric shape.
  */
 public abstract class Shapes {
-    public /* @ nullable @*/ Body body;
-    public /* @ not_null @*/ Matrix2D orient;
+    //@ nullable
+    //por algum motivo o annotation infixo de nullable não funciona.
+    public Body body;
+    //@ non_null
+    public Matrix2D orient;
 
     /**
      * Default constructor
      */
+    /*@ normal_behavior
+      @   ensures orient != null;
+      @ pure
+      @*/
     Shapes() {
         orient = new Matrix2D();
         body = null;
