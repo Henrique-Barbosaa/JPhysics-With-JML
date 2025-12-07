@@ -15,7 +15,6 @@ public class Vectors2D {
       @   ensures this.y == 0;
       @ pure
       @*/
-    //@skipesc
     public Vectors2D() {
         this.x = 0;
         this.y = 0;
@@ -32,7 +31,6 @@ public class Vectors2D {
       @   ensures this.y == y;
       @ pure
       @*/
-    //@skipesc
     public Vectors2D(double x, double y) {
         this.x = x;
         this.y = y;
@@ -49,7 +47,6 @@ public class Vectors2D {
       @   ensures this.y == vector.y;
       @ pure
       @*/
-    //@skipesc
     public Vectors2D(Vectors2D vector) {
         this.x = vector.x;
         this.y = vector.y;
@@ -66,7 +63,6 @@ public class Vectors2D {
       @   ensures -1 <= this.y <= 1;
       @ pure
       @*/
-    //@skipesc
     public Vectors2D(double direction) {
         this.x = Math.cos(direction);
         this.y = Math.sin(direction);
@@ -85,7 +81,6 @@ public class Vectors2D {
       @   ensures this.y == y;
       @   ensures \result == this;
       @*/
-    //@skipesc
     public Vectors2D set(double x, double y) {
         this.x = x;
         this.y = y;
@@ -105,7 +100,6 @@ public class Vectors2D {
       @   ensures this.y == v1.y;
       @   ensures \result == this;
       @*/
-    //@skipesc
     public Vectors2D set(Vectors2D v1) {
         this.x = v1.x;
         this.y = v1.y;
@@ -119,9 +113,10 @@ public class Vectors2D {
      * @return A new Vectors2D object.
      */
     /*@ public normal_behavior
-      @   ensures \result == this;
+      @   ensures \result instanceof Vectors2D;
+      @   ensures \result.x == this.x;
+      @   ensures \result.y == this.y;
       @*/
-    //@skipesc
     public Vectors2D copy() {
         return new Vectors2D(this.x, this.y);
     }
@@ -133,9 +128,10 @@ public class Vectors2D {
      */
     /*@ public normal_behavior
       @   assignable x, y;
+      @   ensures this.x == -\old(x);
+      @   ensures this.y == -\old(y);
       @   ensures \result == this;
       @*/
-    //@skipesc
     public Vectors2D negative() {
         this.x = -x;
         this.y = -y;
@@ -148,10 +144,10 @@ public class Vectors2D {
      * @return Returns a new negative vector of the current instance vector.
      */
     /*@ public normal_behavior
+      @   ensures \result instanceof Vectors2D;
       @   ensures \result.x == -this.x;
       @   ensures \result.y == -this.y;
       @*/
-    //@skipesc
     public Vectors2D negativeVec() {
         return new Vectors2D(-x, -y);
     }
@@ -167,10 +163,10 @@ public class Vectors2D {
       @   requires v != null;
       @   requires Double.isFinite(v.x);
       @   requires Double.isFinite(v.y);
-      @   ensures \result.x == this.x;
-      @   ensures \result.y == this.y;
+      @   ensures \result.x == \old(x) + \old(v.x);
+      @   ensures \result.y == \old(y) + \old(v.y);
+      @   ensures \result == this;
       @*/
-    //@skipesc
     public Vectors2D add(Vectors2D v) {
         this.x = x + v.x;
         this.y = y + v.y;
@@ -187,10 +183,10 @@ public class Vectors2D {
       @   requires v != null;
       @   requires Double.isFinite(v.x);
       @   requires Double.isFinite(v.y);
-      @   ensures \result.x == this.x+v.x;
-      @   ensures \result.y == this.y+v.y;
+      @   ensures \result instanceof Vectors2D;
+      @   ensures \result.x == this.x + v.x;
+      @   ensures \result.y == this.y + v.y;
       @*/
-    //@skipesc
     public Vectors2D addi(Vectors2D v) {
         return new Vectors2D(x + v.x, y + v.y);
     }
@@ -203,8 +199,8 @@ public class Vectors2D {
     /*@ public normal_behavior
       @   ensures \result.x == -this.y;
       @   ensures \result.y == this.x;
+      @   ensures \result instanceof Vectors2D;
       @*/
-    //@skipesc
     public Vectors2D normal() {
         return new Vectors2D(-y, x);
     }
@@ -214,17 +210,18 @@ public class Vectors2D {
      *
      * @return Returns the normalized version of the current instance vector.
      */
-    /*@ assigns x,y;
-      @ public normal_behaviour
-      @   requires x!=0||y!=0;
+    /*@ public normal_behavior
+      @   assigns x, y;
+      @   requires x != 0 || y != 0;
       @   requires Double.isFinite(x*x+y*y);
       @   requires_redundantly x*x+y*y>0;
       @   ensures \result == this;
       @ also
       @ public normal_behavior
+      @   assigns x, y;
       @   requires this.x == 0;
       @   requires this.y == 0;
-      @   requires Math.isPositiveZero(x*x+y*y);
+      @   requires Math.isPositiveZero(x*x + y*y);
       @   ensures this.x == \old(x);
       @   ensures this.y == \old(y);
       @   ensures \result == this;
