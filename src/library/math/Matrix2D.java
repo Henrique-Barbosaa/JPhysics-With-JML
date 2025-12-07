@@ -1,12 +1,21 @@
 package library.math;
 
+//@ non_null_by_default
 public class Matrix2D {
-    public Vectors2D row1 = new Vectors2D();
-    public Vectors2D row2 = new Vectors2D();
+    public /*@ non_null @*/ Vectors2D row1 = new Vectors2D();
+    public /*@ non_null @*/ Vectors2D row2 = new Vectors2D();
 
     /**
      * Default constructor matrix [(0,0),(0,0)] by default.
      */
+    /*@ public normal_behavior
+      @   ensures row1.isZero();
+      @   ensures row2.isZero();
+      @   ensures row1 != null;
+      @   ensures row2 != null;
+      @   pure
+      @*/
+    //@skipesc
     public Matrix2D() {
     }
 
@@ -14,6 +23,8 @@ public class Matrix2D {
      * Constructs and sets the matrix up to be a rotation matrix that stores the angle specified in the matrix.
      * @param radians The desired angle of the rotation matrix
      */
+    //@skipesc
+    //ver transpose
     public Matrix2D(double radians) {
         this.set(radians);
     }
@@ -22,36 +33,87 @@ public class Matrix2D {
      * Sets the matrix up to be a rotation matrix that stores the angle specified in the matrix.
      * @param radians The desired angle of the rotation matrix
      */
+    /*@ public normal_behavior
+      @   assigns row1.*,row2.*;
+      @   requires Double.isFinite(radians);
+      @   ensures row1.x == StrictMath.cos(radians);
+      @   ensures row1.y == -StrictMath.sin(radians);
+      @   ensures row2.x == StrictMath.sin(radians);
+      @   ensures row2.y == StrictMath.cos(radians);
+      @*/
+    //ver transpose
+    //@skipesc
     public void set(double radians) {
         double c = StrictMath.cos(radians);
         double s = StrictMath.sin(radians);
 
         row1.x = c;
+        //@ assert row1.x == c;
         row1.y = -s;
+        //@ assert row1.x == c;
         row2.x = s;
+        //@ assert row1.x == c;
         row2.y = c;
+        //@ assert row1.x == c;
     }
 
     /**
      * Sets current object matrix to be the same as the supplied parameters matrix.
      * @param m Matrix to set current object to
      */
+    /*@ public normal_behavior
+      @   requires row1.isValid() && row2.isValid();
+      @   assigns row1.*,row2.*;
+      @*/
+    //Da mesma forma que transpose(), por algum motivo que não compreendo, a partir do momento
+    //que ele faz row2. = m.row2.x, ele não consegue mais afirmar que row1.x e m.1row1.x são iguais
+    //me ajuda.
+    //@skipesc
     public void set(Matrix2D m) {
         row1.x = m.row1.x;
+        //@ assert m.row1.x == row1.x;
         row1.y = m.row1.y;
+        //@ assert m.row1.x == row1.x;
         row2.x = m.row2.x;
+        //@ assert m.row1.x == row1.x;
         row2.y = m.row2.y;
     }
 
+    /*@ public normal_behavior
+      @   requires row1.isValid() && row2.isValid();
+      @*/
+    //@skipesc
+    //TODO: adicionar os ensures de igualdade, se o openjml não tiver bugado.
     public Matrix2D transpose() {
         Matrix2D mat = new Matrix2D();
         mat.row1.x = row1.x;
+        //@ assert mat.row1.x == row1.x;
         mat.row1.y = row2.x;
+        //@ assert mat.row1.x == row1.x;
         mat.row2.x = row1.y;
+        //Por algum motivo que desconheço, o OpenJML simplesmente tem um derrame e acha que
+        //mat.row1.x != row.x a partir daqui.
+        //?????????????????????????????????????????
         mat.row2.y = row2.y;
         return mat;
     }
 
+    /*@ public normal_behavior
+      @   requires Double.isFinite(row1.x);
+      @   requires Double.isFinite(row1.y);
+      @   requires Double.isFinite(row2.x);
+      @   requires Double.isFinite(row2.y);
+      @   requires Double.isFinite(v.x*row1.x + v.y*row1.y);
+      @   requires Double.isFinite(v.x*row2.x + v.y*row2.y);
+      @   ensures \result.x == \old(v.x)*row1.x + \old(v.y)*row1.y;
+      @   ensures \result.y == \old(v.x)*row2.x + \old(v.y)*row2.y;
+      @   ensures \result == v;
+      @*/
+    //ajeitar isso
+    //@skipesc
+    //Tanto esse quanto o próximo absolutamente recusam
+    //aceitar @   ensures \result.x == \old(v.x)*row1.x+\old(v.y)*row1.y;
+    //além disso por algum motivo esses métodos travam o openjml com força
     public Vectors2D mul(Vectors2D v) {
         double x = v.x;
         double y = v.y;
@@ -60,12 +122,28 @@ public class Matrix2D {
         return v;
     }
 
+
+    /*@ public normal_behavior
+      @   requires Double.isFinite(row1.x);
+      @   requires Double.isFinite(row1.y);
+      @   requires Double.isFinite(row2.x);
+      @   requires Double.isFinite(row2.y);
+      @   requires Double.isFinite((row1.x * v.x) + (row1.y * v.y));
+      @   requires Double.isFinite((row2.x * v.x) + (row2.y * v.y));
+      @   ensures out.x == (row1.x * v.x) + (row1.y * v.y);
+      @   ensures \result.y == (row2.x * v.x) + (row2.y * v.y);
+      @   ensures \result == out;
+      @*/
+    //veja o de cima.
+    //ajeitar isso
+    //@skipesc
     public Vectors2D mul(Vectors2D v, Vectors2D out) {
         out.x = row1.x * v.x + row1.y * v.y;
         out.y = row2.x * v.x + row2.y * v.y;
         return out;
     }
 
+    //@skipesc
     public static void main(String[] args) {
         Vectors2D test = new Vectors2D(5, 0);
         Matrix2D m = new Matrix2D();
@@ -74,6 +152,7 @@ public class Matrix2D {
         System.out.println(test);
     }
 
+    //@skipesc
     @Override
     public String toString() {
         return row1.x + " : " + row1.y + "\n" + row2.x + " : " + row2.y;

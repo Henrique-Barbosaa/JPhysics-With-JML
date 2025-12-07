@@ -37,6 +37,9 @@ public class Body {
      * @param x     Position x in world space.
      * @param y     Position y in world space.
      */
+    /*@ public normal_behavior
+      @
+      @*/
     public Body(Shapes shape, double x, double y) {
         this.shape = shape;
         this.shape.body = this;

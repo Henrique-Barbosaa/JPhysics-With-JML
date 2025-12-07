@@ -13,12 +13,20 @@ import java.awt.geom.Ellipse2D;
  */
 public class Circle extends Shapes {
     public double radius;
-
+    /*@ public invariant radius >= 0;
+      @ public invariant Double.isFinite(radius);
+      @*/
     /**
      * Constructor for a circle.
      *
      * @param radius Desired radius of the circle.
      */
+    /*@ public normal_behavior
+      @   requires radius >=0;
+      @   requires Double.isFinite(radius);
+      @   ensures this.radius == radius;
+      @ pure
+      @*/
     public Circle(double radius) {
         this.radius = radius;
     }
@@ -28,6 +36,14 @@ public class Circle extends Shapes {
      *
      * @param density The desired density to factor into the calculation.
      */
+    /*@ also
+      @ public normal_behavior
+      @   requires Double.isFinite(StrictMath.PI * radius * radius * density);
+      @   requires Double.isFinite(StrictMath.PI * radius * radius * density * radius * radius);
+      @   requires density >= 0;
+      @   ensures body.mass >= 0;
+      @   ensures body.I >= 0;
+      @*/
     @Override
     public void calcMass(double density) {
         body.mass = StrictMath.PI * radius * radius * density;
@@ -39,6 +55,9 @@ public class Circle extends Shapes {
     /**
      * Generates an AABB and binds it to the body.
      */
+    /*@ also
+      @ ensures body.aabb != null;
+      @*/
     @Override
     public void createAABB() {
         body.aabb = new AABB(new Vectors2D(-radius, -radius), new Vectors2D(radius, radius));

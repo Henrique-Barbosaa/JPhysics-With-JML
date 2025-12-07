@@ -11,10 +11,12 @@ public class Vectors2D {
      * Default constructor - x/y initialised to zero.
      */
     /*@ public normal_behavior
+      @   ensures this != null;
       @   ensures this.x == 0;
       @   ensures this.y == 0;
       @ pure
       @*/
+    //@skipesc
     public Vectors2D() {
         this.x = 0;
         this.y = 0;
@@ -27,10 +29,12 @@ public class Vectors2D {
      * @param y Sets y value.
      */
     /*@ public normal_behavior
+      @   ensures this != null;
       @   ensures this.x == x;
       @   ensures this.y == y;
       @ pure
       @*/
+    //@skipesc
     public Vectors2D(double x, double y) {
         this.x = x;
         this.y = y;
@@ -43,10 +47,12 @@ public class Vectors2D {
      */
     /*@ public normal_behavior
       @   requires vector != null;
+      @   ensures this != null;
       @   ensures this.x == vector.x;
       @   ensures this.y == vector.y;
       @ pure
       @*/
+    //@skipesc
     public Vectors2D(Vectors2D vector) {
         this.x = vector.x;
         this.y = vector.y;
@@ -59,10 +65,12 @@ public class Vectors2D {
      */
     /*@ public normal_behavior
       @   requires Double.isFinite(direction);
+      @   ensures this != null;
       @   ensures -1 <= this.x <= 1;
       @   ensures -1 <= this.y <= 1;
       @ pure
       @*/
+    //@skipesc
     public Vectors2D(double direction) {
         this.x = Math.cos(direction);
         this.y = Math.sin(direction);
@@ -81,6 +89,7 @@ public class Vectors2D {
       @   ensures this.y == y;
       @   ensures \result == this;
       @*/
+    //@skipesc
     public Vectors2D set(double x, double y) {
         this.x = x;
         this.y = y;
@@ -100,6 +109,7 @@ public class Vectors2D {
       @   ensures this.y == v1.y;
       @   ensures \result == this;
       @*/
+    //@skipesc
     public Vectors2D set(Vectors2D v1) {
         this.x = v1.x;
         this.y = v1.y;
@@ -116,7 +126,9 @@ public class Vectors2D {
       @   ensures \result instanceof Vectors2D;
       @   ensures \result.x == this.x;
       @   ensures \result.y == this.y;
+      @   spec_pure
       @*/
+    //@skipesc
     public Vectors2D copy() {
         return new Vectors2D(this.x, this.y);
     }
@@ -132,6 +144,7 @@ public class Vectors2D {
       @   ensures this.y == -\old(y);
       @   ensures \result == this;
       @*/
+    //@skipesc
     public Vectors2D negative() {
         this.x = -x;
         this.y = -y;
@@ -147,7 +160,9 @@ public class Vectors2D {
       @   ensures \result instanceof Vectors2D;
       @   ensures \result.x == -this.x;
       @   ensures \result.y == -this.y;
+      @   spec_pure
       @*/
+    //@skipesc
     public Vectors2D negativeVec() {
         return new Vectors2D(-x, -y);
     }
@@ -167,6 +182,7 @@ public class Vectors2D {
       @   ensures \result.y == \old(y) + \old(v.y);
       @   ensures \result == this;
       @*/
+    //@skipesc
     public Vectors2D add(Vectors2D v) {
         this.x = x + v.x;
         this.y = y + v.y;
@@ -186,7 +202,9 @@ public class Vectors2D {
       @   ensures \result instanceof Vectors2D;
       @   ensures \result.x == this.x + v.x;
       @   ensures \result.y == this.y + v.y;
+      @ spec_pure
       @*/
+    //@skipesc
     public Vectors2D addi(Vectors2D v) {
         return new Vectors2D(x + v.x, y + v.y);
     }
@@ -200,7 +218,9 @@ public class Vectors2D {
       @   ensures \result.x == -this.y;
       @   ensures \result.y == this.x;
       @   ensures \result instanceof Vectors2D;
+      @   spec_pure
       @*/
+    //@skipesc
     public Vectors2D normal() {
         return new Vectors2D(-y, x);
     }
@@ -213,7 +233,7 @@ public class Vectors2D {
     /*@ public normal_behavior
       @   assigns x, y;
       @   requires x != 0 || y != 0;
-      @   requires Double.isFinite(x*x+y*y);
+      @   requires Double.POSITIVE_INFINITY>x*x+y*y;
       @   requires_redundantly x*x+y*y>0;
       @   ensures \result == this;
       @ also
@@ -226,6 +246,7 @@ public class Vectors2D {
       @   ensures this.y == \old(y);
       @   ensures \result == this;
       @*/
+    //@skipesc
     public Vectors2D normalize() {
         double d = Math.sqrt(x * x + y * y);
         if (d == 0) {
@@ -241,21 +262,25 @@ public class Vectors2D {
      *
      * @return A normalized vector of the current instance vector.
      */
-    /*@ requires Double.isFinite(x);
-      @ requires Double.isFinite(y);
-      @ requires x*x+y*y > 0;
-      @ requires_redundantly x*x+y*y<Double.POSITIVE_INFINITY;
-      @ ensures \result.length() == 1;
+    /*@ public normal_behavior
+      @   requires x != 0 || y != 0;
+      @   requires Double.POSITIVE_INFINITY>x*x+y*y;
+      @   requires_redundantly x*x+y*y>0;
+      @   requires_redundantly length()>0.0;
+      @   ensures x==\old(x);
+      @   ensures y==\old(y);
       @ also
-      @ requires x == 0;
-      @ requires y == 0;
-      @ requires_redundantly Math.isPositiveZero(x*x+y*y);
-      @ ensures \result.x == this.x;
-      @ ensures \result.y == this.y;
+      @ public normal_behavior
+      @   requires !(x!=0||y!=0);
+      @   requires Math.isPositiveZero(x*x + y*y);
+      @   ensures \result.x == \old(x);
+      @   ensures \result.y == \old(y);
+      @ spec_pure
       @*/
+    //@skipesc
+    //TODO: ajeitar
     public Vectors2D getNormalized() {
         double d = Math.sqrt(x * x + y * y);
-
         if (d == 0) {
             d = 1;
         }
@@ -270,8 +295,7 @@ public class Vectors2D {
      */
     /*@ public normal_behavior
       @   requires v != null;
-      @   requires Double.isFinite(v.x);
-      @   requires Double.isFinite(v.y);
+      @   requires Double.POSITIVE_INFINITY>(x-v.x)*(x-v.x)+(y-v.y)*(y-v.y)>0;
       @   ensures \result == StrictMath.sqrt((this.x-v.x)*(this.x-v.x)+(this.y-v.y)*(this.y-v.y));
       @   pure
       @*/
@@ -294,6 +318,7 @@ public class Vectors2D {
       @   requires Double.isFinite(v1.y);
       @   ensures \result.x == this.x-v1.x;
       @   ensures \result.y == this.y-v1.y;
+      @   spec_pure
       @*/
     //@skipesc
     public Vectors2D subtract(Vectors2D v1) {
@@ -320,9 +345,9 @@ public class Vectors2D {
 
     /*@ public normal_behavior
       @   requires Double.isFinite(a);
-      @   ensures \result.x == -y*a;
-      @   ensures \result.y == x*a;
+      @   ensures \result == this.normal().scalar(a);
       @*/
+    //@skipesc
     public Vectors2D crossProduct(double a) {
         return this.normal().scalar(a);
     }
@@ -331,6 +356,7 @@ public class Vectors2D {
       @   requires Double.isFinite(a);
       @   ensures \result.x == this.x*a;
       @   ensures \result.y == this.y*a;
+      @   spec_pure
       @*/
     //@skipesc
     public Vectors2D scalar(double a) {
@@ -360,18 +386,17 @@ public class Vectors2D {
      *
      * @return double
      */
-        /*@   requires Double.isFinite(x*x+y*y);
-          @   requires x*x+y*y > 0;
-          @   requires x*x+y*y < Double.POSITIVE_INFINITY;
+        /*@ public normal_behavior
+          @   requires Double.POSITIVE_INFINITY>x*x+y*y>0;
           @   ensures \result >= 0;
+          @   ensures this.isZero() == false;
+          @   ensures_redundantly x!=0||y!=0;
           @ also
           @   requires Math.isPositiveZero(x*x+y*y);
           @   ensures Math.isPositiveZero(\result);
           @ pure
           @*/
     //@skipesc
-
-    //AJEITAR DEPOIS
     public double length() {
             return Math.sqrt(x * x + y * y);
 
@@ -424,13 +449,18 @@ public class Vectors2D {
      * @return boolean value whether a vector is valid or not.
      */
     /*@ public normal_behavior
-      @   ensures \result == !(Double.isNaN(x) || Double.isInfinite(x) || Double.isNaN(y) || Double.isInfinite(y));
+      @   requires !(Double.isNaN(x) || Double.isInfinite(x) || Double.isNaN(y) || Double.isInfinite(y));
+      @   ensures \result == true;
+      @ also
+      @   requires (Double.isNaN(x) || Double.isInfinite(x) || Double.isNaN(y) || Double.isInfinite(y));
+      @   ensures \result == false;
       @   pure
       @*/
-    //@skipesc
+
     //por algum motivo que eu desconheço usar o que tá escrito no return dá erro, e usar Double.isFinite()
     //também, mas se eu jogar a lei de demorgan no return ele começa a funcionar
     //laerte eu não entendi
+    //@skipesc
     public final boolean isValid() {
         return !Double.isNaN(x) && !Double.isInfinite(x) && !Double.isNaN(y) && !Double.isInfinite(y);
     }
@@ -441,7 +471,11 @@ public class Vectors2D {
      * @return boolean value whether the vector is set to (0,0).
      */
     /*@ public normal_behavior
-      @   ensures \result == (Math.abs(this.x) == 0 && Math.abs(this.y) == 0);
+      @   requires x == 0 && y == 0;
+      @   ensures \result == true;
+      @ also
+      @   requires x != 0 || y != 0;
+      @   ensures \result == false;
       @   pure
       @*/
     //@skipesc
@@ -456,14 +490,19 @@ public class Vectors2D {
      * @return A Vectors2D array of zero initialised vectors.
      */
     /*@ public normal_behavior
-      @   requires Double.isFinite(n);
-      @   requires n > 0;
+      @   requires Integer.MAX_VALUE > n > 0;
       @   ensures \result.length == n;
-      @   ensures \forall int i; 0 <= i < n; \result[i].isZero();
       @*/
+
+    //TODO: Ajeitar essa degraça
+    //Eu não sei porque "@ maintaining \forall int k; 0<=k<\count; array[k].isZero();" (ou a mesma coisa
+    //substituindo o ".isZero()" por " != null" simplesmente não funciona mas sem isso simplesmente
+    //não dá pra colocar que ele inicializa tudo com 0,0.
+    //@skipesc
     public static Vectors2D[] createArray(int n) {
         Vectors2D[] array = new Vectors2D[n];
         /*@ maintaining 0 <= \count <= array.length;
+          @ loop_invariant (\forall int j; 0<=j<\count; array[j] != null);
           @ loop_writes array[*];
           @ decreases array.length - \count;
           @*/

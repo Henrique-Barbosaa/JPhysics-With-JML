@@ -21,6 +21,14 @@ public class Polygon extends Shapes {
      *
      * @param vertList Vertices of polygon to create.
      */
+    //menor polígono possível é um triângulo por motivos que devem ser óbvios.
+    /*@ public normal_behavior
+      @   requires vertList.length > 3;
+      @   ensures this.vertices != null;
+      @   ensures \forall int i; 0<=i<vertices.length; vertices[i]!=null;
+      @   ensures this.normals != null
+      @   ensures \forall int i; 0<=i<normals.length; normals[i]!=null;
+      @*/
     public Polygon(Vectors2D[] vertList) {
         this.vertices = generateHull(vertList, vertList.length);
         calcNormals();
@@ -32,6 +40,12 @@ public class Polygon extends Shapes {
      * @param width  Desired width of rectangle
      * @param height Desired height of rectangle
      */
+    /*@ public normal_behavior
+      @   requires Double.isFinite(width);
+      @   requires Double.isFinite(height);
+      @   ensures vertices.length == 4;
+      @   ensures normals.length == 4;
+      @*/
     public Polygon(double width, double height) {
         vertices = new Vectors2D[4];
         vertices[0] = new Vectors2D(-width, -height);
@@ -51,8 +65,19 @@ public class Polygon extends Shapes {
      * @param radius    The maximum distance any vertex is away from the center of mass.
      * @param noOfSides The desired number of face the polygon has.
      */
+    /*@ public normal_behavior
+      @   requires radius > 0;
+      @   requires noOfSides > 0;
+      @   ensures vertices.length == noOfSides;
+      @   ensures normals.length == noOfSides;
+      @*/
     public Polygon(int radius, int noOfSides) {
         vertices = new Vectors2D[noOfSides];
+        /*@ maintaining 0 <= i <= vertices.length;
+          @ maintaining \forall int k; 0 <= k < i; vertices[k] != null;
+          @ loop_writes i, a[*];
+          @ decreases vertices.length-i;
+         */
         for (int i = 0; i < noOfSides; i++) {
             double angle = 2 * Math.PI / noOfSides * (i + 0.75);
             double pointX = radius * StrictMath.cos(angle);
@@ -65,8 +90,17 @@ public class Polygon extends Shapes {
     /**
      * Generates normals for each face of the polygon. Positive normals of polygon faces face outward.
      */
+    /*@ public normal_behavior
+      @   requires vertices != null;
+      @   ensures normals.length == vertices.length
+      @*/
     public void calcNormals() {
         normals = new Vectors2D[vertices.length];
+        /*@ maintaining 0 <= i <= normals.length;
+          @ maintaining \forall int k; 0 <= k < i; normals[k] != null;
+          @ loop_writes i, a[*];
+          @ decreases normals.length-i;
+         */
         for (int i = 0; i < vertices.length; i++) {
             Vectors2D face = vertices[i + 1 == vertices.length ? 0 : i + 1].subtract(vertices[i]);
             normals[i] = face.normal().normalize().negative();
@@ -78,13 +112,23 @@ public class Polygon extends Shapes {
      *
      * @param density The desired density to factor into the calculation.
      */
+    /*@ public normal_behavior
+      @   requires Double.isFinite(density);
+      @   requires density>0;
+      @   ensures mass
+      @*/
     @Override
     public void calcMass(double density) {
         Vectors2D centroidDistVec = new Vectors2D(0.0, 0.0);
         double area = 0.0;
         double I = 0.0;
         double k = 1.0 / 3.0;
-
+        //TODO: Ajeitar o segundo maintaining
+        /*@ maintaining 0 <= i <= vertices.length;
+          @ maintaining \forall int k; 0 <= k < i; a[k].isValid();
+          @ loop_writes i, area, I, centroidDistVec;
+          @ decreases vertices.length-i;
+         */
         for (int i = 0; i < vertices.length; ++i) {
             Vectors2D point1 = vertices[i];
             Vectors2D point2 = vertices[(i + 1) % vertices.length];
@@ -101,7 +145,12 @@ public class Polygon extends Shapes {
             I += (0.25 * k * areaOfParallelogram) * (intx2 + inty2);
         }
         centroidDistVec = centroidDistVec.scalar(1.0 / area);
-
+        //TODO: Ajeitar o segundo maintaining
+        /*@ maintaining 0 <= i <= vertices.length;
+          @ maintaining \forall int k; 0 <= k < i; a[k].isValid();
+          @ loop_writes i, area, I, centroidDistVec;
+          @ decreases vertices.length-i;
+         */
         for (int i = 0; i < vertices.length; i++) {
             vertices[i] = vertices[i].subtract(centroidDistVec);
         }
@@ -122,7 +171,12 @@ public class Polygon extends Shapes {
         double maxX = firstPoint.x;
         double minY = firstPoint.y;
         double maxY = firstPoint.y;
-
+        //TODO: Ajeitar o segundo maintaining
+        /*@ maintaining 0 <= i <= vertices.length;
+          @ maintaining \forall int k; 0 <= k < i; a[k].isValid();
+          @ loop_writes i, area, I, centroidDistVec;
+          @ decreases vertices.length-i;
+         */
         for (int i = 1; i < vertices.length; i++) {
             Vectors2D point = orient.mul(vertices[i], new Vectors2D());
             double px = point.x;
@@ -189,6 +243,7 @@ public class Polygon extends Shapes {
 
         int firstPointIndex = 0;
         double minX = Double.MAX_VALUE;
+
         for (int i = 0; i < n; i++) {
             double x = vertices[i].x;
             if (x < minX) {

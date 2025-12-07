@@ -14,8 +14,8 @@ import java.awt.geom.Path2D;
  * Abstract class presenting a geometric shape.
  */
 public abstract class Shapes {
-    public Body body;
-    public Matrix2D orient;
+    public /* @ nullable @*/ Body body;
+    public /* @ not_null @*/ Matrix2D orient;
 
     /**
      * Default constructor
