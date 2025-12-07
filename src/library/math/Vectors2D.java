@@ -490,24 +490,20 @@ public class Vectors2D {
      * @return A Vectors2D array of zero initialised vectors.
      */
     /*@ public normal_behavior
-      @   requires Integer.MAX_VALUE > n > 0;
+      @   requires Integer.MAX_VALUE > n && n > 0;
       @   ensures \result.length == n;
+      @   ensures \result != null;
+      @   ensures (\forall int k; 0 <= k && k < n; \result[k] != null);
       @*/
-
-    //TODO: Ajeitar essa degraça
-    //Eu não sei porque "@ maintaining \forall int k; 0<=k<\count; array[k].isZero();" (ou a mesma coisa
-    //substituindo o ".isZero()" por " != null" simplesmente não funciona mas sem isso simplesmente
-    //não dá pra colocar que ele inicializa tudo com 0,0.
-    //@skipesc
     public static Vectors2D[] createArray(int n) {
         Vectors2D[] array = new Vectors2D[n];
-        /*@ maintaining 0 <= \count <= array.length;
-          @ loop_invariant (\forall int j; 0<=j<\count; array[j] != null);
+        /*@ maintaining 0 <= i && i <= array.length;
+          @ loop_invariant (\forall int j; 0 <= j < i; array[j] != null);
           @ loop_writes array[*];
-          @ decreases array.length - \count;
+          @ decreases array.length - i;
           @*/
-        for (Vectors2D v : array) {
-            v = new Vectors2D();
+        for (int i = 0; i < array.length; i++) {
+            array[i] = new Vectors2D();
         }
         return array;
     }
