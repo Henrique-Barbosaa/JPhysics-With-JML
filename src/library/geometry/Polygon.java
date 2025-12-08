@@ -43,8 +43,10 @@ public class Polygon extends Shapes {
      * @param height Desired height of rectangle
      */
     /*@ public normal_behavior
-      @   requires Double.isFinite(width);
-      @   requires Double.isFinite(height);
+      @   requires !Double.isInfinite(width);
+      @   requires !Double.isInfinite(height);
+      @   requires !Double.isNaN(width);
+      @   requires !Double.isNaN(height);
       @   ensures vertices.length == 4;
       @   ensures normals.length == 4;
       @   pure
@@ -71,7 +73,8 @@ public class Polygon extends Shapes {
     /*@ public normal_behavior
       @   requires radius > 0;
       @   requires noOfSides > 0;
-      @   requires Double.isFinite(2 * Math.PI / noOfSides * (noOfSides - 1 + 0.75));
+      @   requires !Double.isInfinite(2 * Math.PI / noOfSides * (noOfSides - 1 + 0.75));
+      @   requires !Double.isNaN(2 * Math.PI / noOfSides * (noOfSides - 1 + 0.75));
       @   ensures vertices.length == noOfSides;
       @   ensures normals.length == noOfSides;
       @*/
@@ -125,7 +128,8 @@ public class Polygon extends Shapes {
      */
     /*@ also public normal_behavior
       @   assigns body.mass, body.I, body.invMass, body.invI;
-      @   requires Double.isFinite(density);
+      @   requires !Double.isInfinite(density);
+      @   requires !Double.isNaN(density);
       @   requires density>0.0;
       @   requires body != null;
       @   requires \forall int i; 0<=i<vertices.length; vertices[i].isValid();

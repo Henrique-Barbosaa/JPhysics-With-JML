@@ -37,8 +37,8 @@ public abstract class Shapes {
      *
      * @param density The desired density to factor into the calculation.
      */
-    /*@   assigns body.mass, body.I, body.invMass, body.invI;
-      @   requires body != null;
+    /*@ public normal_behavior
+      @   assigns body.mass, body.I, body.invMass, body.invI;
       @   requires density > 0.0;
       @   ensures body.mass >= 0.0;
       @   ensures body.I >= 0.0;
@@ -51,7 +51,6 @@ public abstract class Shapes {
      * Generates an AABB for the shape.
      */
     /*@ public normal_behavior
-      @   requires body != null;
       @   assigns body.aabb, body.aabb.*;
       @   ensures body.aabb != null;
       @   ensures body.aabb.min != null;
