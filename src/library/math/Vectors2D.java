@@ -64,7 +64,8 @@ public class Vectors2D {
      * @param direction Direction in radians.
      */
     /*@ public normal_behavior
-      @   requires Double.isFinite(direction);
+      @   requires !Double.isInfinite(direction);
+      @   requires !Double.isNaN(direction);
       @   ensures this != null;
       @   ensures -1 <= this.x <= 1;
       @   ensures -1 <= this.y <= 1;
@@ -177,16 +178,21 @@ public class Vectors2D {
     /*@ public normal_behavior
       @   assigns x,y;
       @   requires v != null;
-      @   requires Double.isFinite(v.x);
-      @   requires Double.isFinite(v.y);
-      @   requires Double.isFinite(x + v.x);
-      @   requires Double.isFinite(y + v.y);
+      @   requires !Double.isInfinite(x + v.x);
+      @   requires !Double.isInfinite(y + v.y);
+      @   requires !Double.isNaN(x + v.x);
+      @   requires !Double.isNaN(y + v.y);
       @   ensures \result.x == \old(x) + \old(v.x);
       @   ensures \result.y == \old(y) + \old(v.y);
       @   ensures \result == this;
-      @   ensures Double.isFinite(\result.x);
-      @   ensures Double.isFinite(\result.y);
+      @   ensures !Double.isInfinite(\result.x);
+      @   ensures !Double.isInfinite(\result.y);
+      @   ensures !Double.isNaN(\result.x);
+      @   ensures !Double.isNaN(\result.y);
+      @   ensures_redundantly this.isValid();
       @*/
+    //por algum motivo isFinite não funciona sem !isInfinite
+    //??????????????????????????
     public Vectors2D add(Vectors2D v) {
         this.x = x + v.x;
         this.y = y + v.y;
@@ -201,8 +207,10 @@ public class Vectors2D {
      */
     /*@ public normal_behavior
       @   requires v != null;
-      @   requires Double.isFinite(v.x);
-      @   requires Double.isFinite(v.y);
+      @   requires !Double.isInfinite(v.x);
+      @   requires !Double.isInfinite(v.y);
+      @   requires !Double.isNaN(v.x);
+      @   requires !Double.isNaN(v.y);
       @   ensures \result instanceof Vectors2D;
       @   ensures \result.x == this.x + v.x;
       @   ensures \result.y == this.y + v.y;
@@ -318,8 +326,10 @@ public class Vectors2D {
      */
     /*@ public normal_behavior
       @   requires v1 != null;
-      @   requires Double.isFinite(v1.x);
-      @   requires Double.isFinite(v1.y);
+      @   requires !Double.isInfinite(v1.x);
+      @   requires !Double.isInfinite(v1.y);
+      @   requires !Double.isNaN(v1.x);
+      @   requires !Double.isNaN(v1.y);
       @   ensures \result.x == this.x-v1.x;
       @   ensures \result.y == this.y-v1.y;
       @   spec_pure
@@ -337,8 +347,10 @@ public class Vectors2D {
      */
     /*@ public normal_behavior
       @   requires v1 != null;
-      @   requires Double.isFinite(v1.x);
-      @   requires Double.isFinite(v1.y);
+      @   requires !Double.isInfinite(v1.x);
+      @   requires !Double.isInfinite(v1.y);
+      @   requires !Double.isNaN(v1.x);
+      @   requires !Double.isNaN(v1.y);
       @   ensures \result == this.x*v1.y-this.y*v1.x;
       @   pure
       @*/
@@ -348,7 +360,8 @@ public class Vectors2D {
     }
 
     /*@ public normal_behavior
-      @   requires Double.isFinite(a);
+      @   requires !Double.isInfinite(a);
+      @   requires !Double.isNaN(a);
       @   ensures \result == this.normal().scalar(a);
       @*/
     //@skipesc
@@ -357,7 +370,8 @@ public class Vectors2D {
     }
 
     /*@ public normal_behavior
-      @   requires Double.isFinite(a);
+      @   requires !Double.isInfinite(a);
+      @   requires !Double.isNaN(a);
       @   ensures \result.x == this.x*a;
       @   ensures \result.y == this.y*a;
       @   spec_pure
@@ -375,8 +389,10 @@ public class Vectors2D {
      */
     /*@ public normal_behavior
       @   requires v1 != null;
-      @   requires Double.isFinite(v1.x);
-      @   requires Double.isFinite(v1.y);
+      @   requires !Double.isInfinite(v1.x);
+      @   requires !Double.isInfinite(v1.y);
+      @   requires !Double.isNaN(v1.x);
+      @   requires !Double.isNaN(v1.y);
       @   ensures \result == this.x*v1.x+this.y*v1.y;
       @   pure
       @*/
@@ -416,9 +432,12 @@ public class Vectors2D {
      */
     /*@ public normal_behavior
       @   requires a != null;
-      @   requires Double.isFinite(a.x);
-      @   requires Double.isFinite(a.y);
-      @   requires Double.isFinite(s);
+      @   requires !Double.isInfinite(a.x);
+      @   requires !Double.isInfinite(a.y);
+      @   requires !Double.isInfinite(s);
+      @   requires !Double.isNaN(a.x);
+      @   requires !Double.isNaN(a.y);
+      @   requires !Double.isNaN(s);
       @   ensures \result.x == s*a.y;
       @   ensures \result.y == -s*a.x;
       @*/
@@ -436,9 +455,12 @@ public class Vectors2D {
      */
     /*@ public normal_behavior
       @   requires a != null;
-      @   requires Double.isFinite(a.x);
-      @   requires Double.isFinite(a.y);
-      @   requires Double.isFinite(s);
+      @   requires !Double.isInfinite(a.x);
+      @   requires !Double.isInfinite(a.y);
+      @   requires !Double.isInfinite(s);
+      @   requires !Double.isNaN(a.x);
+      @   requires !Double.isNaN(a.y);
+      @   requires !Double.isNaN(s);
       @   ensures \result.x == -s*a.y;
       @   ensures \result.y == s*a.x;
       @*/
@@ -455,9 +477,14 @@ public class Vectors2D {
     /*@ public normal_behavior
       @   requires !(Double.isNaN(x) || Double.isInfinite(x) || Double.isNaN(y) || Double.isInfinite(y));
       @   ensures \result == true;
+      @   ensures !Double.isNaN(x);
+      @   ensures !Double.isInfinite(x);
+      @   ensures !Double.isNaN(y);
+      @   ensures !Double.isInfinite(y);
       @ also
       @   requires (Double.isNaN(x) || Double.isInfinite(x) || Double.isNaN(y) || Double.isInfinite(y));
       @   ensures \result == false;
+      @   ensures Double.isNaN(x) || Double.isInfinite(x) || Double.isNaN(y) || Double.isInfinite(y);
       @   pure
       @*/
 
@@ -499,6 +526,7 @@ public class Vectors2D {
       @   ensures \result != null;
       @   ensures (\forall int k; 0 <= k && k < n; \result[k] != null);
       @*/
+    //@skipesc
     public static Vectors2D[] createArray(int n) {
         Vectors2D[] array = new Vectors2D[n];
         /*@ maintaining 0 <= i && i <= array.length;

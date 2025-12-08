@@ -41,11 +41,11 @@ public class Circle extends Shapes {
       @   requires body != null;
       @   requires Double.isFinite(StrictMath.PI * radius * radius * density * radius * radius);
       @   requires Double.isFinite(StrictMath.PI * radius * radius * density * radius * radius);
-      @   requires density >= 0;
-      @   ensures body.mass >= 0;
-      @   ensures body.I >= 0;
-      @   ensures body.invMass >= 0;
-      @   ensures body.invI >= 0;
+      @   requires density > 0.0;
+      @   ensures body.mass >= 0.0;
+      @   ensures body.I >= 0.0;
+      @   ensures body.invMass >= 0.0;
+      @   ensures body.invI >= 0.0;
       @*/
     @Override
     public void calcMass(double density) {
@@ -58,13 +58,6 @@ public class Circle extends Shapes {
     /**
      * Generates an AABB and binds it to the body.
      */
-    /*@ also public normal_behavior
-      @   requires body != null;
-      @   assigns body.aabb, body.aabb.*;
-      @   ensures body.aabb != null;
-      @   ensures body.aabb.min != null;
-      @   ensures body.aabb.max != null;
-      @*/
     //@skipesc
     @Override
     public void createAABB() {

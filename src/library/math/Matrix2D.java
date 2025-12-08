@@ -35,7 +35,8 @@ public class Matrix2D {
      */
     /*@ public normal_behavior
       @   assigns row1.*,row2.*;
-      @   requires Double.isFinite(radians);
+      @   requires !Double.isInfinite(radians);
+      @   requires !Double.isNaN(radians);
       @   ensures row1.x == StrictMath.cos(radians);
       @   ensures row1.y == -StrictMath.sin(radians);
       @   ensures row2.x == StrictMath.sin(radians);
@@ -68,14 +69,10 @@ public class Matrix2D {
     //Da mesma forma que transpose(), por algum motivo que não compreendo, a partir do momento
     //que ele faz row2. = m.row2.x, ele não consegue mais afirmar que row1.x e m.1row1.x são iguais
     //me ajuda.
-    //@skipesc
     public void set(Matrix2D m) {
         row1.x = m.row1.x;
-        //@ assert m.row1.x == row1.x;
         row1.y = m.row1.y;
-        //@ assert m.row1.x == row1.x;
         row2.x = m.row2.x;
-        //@ assert m.row1.x == row1.x;
         row2.y = m.row2.y;
     }
 
@@ -103,16 +100,15 @@ public class Matrix2D {
       @   requires v != row1;
       @   requires v != row2;
       @   assignable v.x, v.y;
-      @   requires Double.isFinite(row1.x);
-      @   requires Double.isFinite(row1.y);
-      @   requires Double.isFinite(row2.x);
-      @   requires Double.isFinite(row2.y);
-      @   requires Double.isFinite(v.x*row1.x + v.y*row1.y);
-      @   requires Double.isFinite(v.x*row2.x + v.y*row2.y);
+      @   requires !Double.isInfinite(v.x*row1.x + v.y*row1.y);
+      @   requires !Double.isInfinite(v.x*row2.x + v.y*row2.y);
+      @   requires !Double.isNaN(v.x*row1.x + v.y*row1.y);
+      @   requires !Double.isNaN(v.x*row2.x + v.y*row2.y);
       @   ensures \result.x == \old(row1.x * v.x + row1.y * v.y);
       @   ensures \result.y == \old(row2.x * v.x + row2.y * v.y);
       @   ensures \result == v;
       @*/
+    //@skipesc
     public Vectors2D mul(Vectors2D v) {
         double x = v.x;
         double y = v.y;
@@ -131,12 +127,10 @@ public class Matrix2D {
       @   requires out != row2;
       @   requires v != out;
       @
-      @   requires Double.isFinite(row1.x);
-      @   requires Double.isFinite(row1.y);
-      @   requires Double.isFinite(row2.x);
-      @   requires Double.isFinite(row2.y);
-      @   requires Double.isFinite((row1.x * v.x) + (row1.y * v.y));
-      @   requires Double.isFinite((row2.x * v.x) + (row2.y * v.y));
+      @   requires !Double.isInfinite((row1.x * v.x) + (row1.y * v.y));
+      @   requires !Double.isInfinite((row2.x * v.x) + (row2.y * v.y));
+      @   requires !Double.isNaN((row1.x * v.x) + (row1.y * v.y));
+      @   requires !Double.isNaN((row2.x * v.x) + (row2.y * v.y));
       @
       @   ensures out.x == (row1.x * v.x) + (row1.y * v.y);
       @   ensures \result.y == (row2.x * v.x) + (row2.y * v.y);

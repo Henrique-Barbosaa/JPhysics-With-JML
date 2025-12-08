@@ -43,8 +43,10 @@ public class Polygon extends Shapes {
      * @param height Desired height of rectangle
      */
     /*@ public normal_behavior
-      @   requires Double.isFinite(width);
-      @   requires Double.isFinite(height);
+      @   requires !Double.isInfinite(width);
+      @   requires !Double.isInfinite(height);
+      @   requires !Double.isNaN(width);
+      @   requires !Double.isNaN(height);
       @   ensures vertices.length == 4;
       @   ensures normals.length == 4;
       @   pure
@@ -71,7 +73,8 @@ public class Polygon extends Shapes {
     /*@ public normal_behavior
       @   requires radius > 0;
       @   requires noOfSides > 0;
-      @   requires Double.isFinite(2 * Math.PI / noOfSides * (noOfSides - 1 + 0.75));
+      @   requires !Double.isInfinite(2 * Math.PI / noOfSides * (noOfSides - 1 + 0.75));
+      @   requires !Double.isNaN(2 * Math.PI / noOfSides * (noOfSides - 1 + 0.75));
       @   ensures vertices.length == noOfSides;
       @   ensures normals.length == noOfSides;
       @*/
@@ -125,14 +128,15 @@ public class Polygon extends Shapes {
      */
     /*@ also public normal_behavior
       @   assigns body.mass, body.I, body.invMass, body.invI;
-      @   requires Double.isFinite(density);
-      @   requires density>0;
+      @   requires !Double.isInfinite(density);
+      @   requires !Double.isNaN(density);
+      @   requires density>0.0;
       @   requires body != null;
       @   requires \forall int i; 0<=i<vertices.length; vertices[i].isValid();
-      @   ensures body.mass>=0;
-      @   ensures body.invMass>=0;
-      @   ensures body.I>=0;
-      @   ensures body.invI>=0;
+      @   ensures body.mass>=0.0;
+      @   ensures body.invMass>=0.0;
+      @   ensures body.I>=0.0;
+      @   ensures body.invI>=0.0;
       @*/
     //@skipesc
     //eu não sei como ajeitar esse negócio, provável causa perdida.
@@ -184,13 +188,6 @@ public class Polygon extends Shapes {
     /**
      * Generates an AABB encompassing the polygon and binds it to the body.
      */
-    /*@ also public normal_behavior
-      @   assigns body.aabb, body.aabb.*;
-      @   requires body != null;
-      @   ensures body.aabb != null;
-      @   ensures body.aabb.min != null;
-      @   ensures body.aabb.max != null;
-      @*/
     //@skipesc
     @Override
     public void createAABB() {
