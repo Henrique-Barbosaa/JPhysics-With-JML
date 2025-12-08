@@ -28,6 +28,12 @@ public class Arbiter {
     public int contactCount = 0;
     public double restitution = 0;
     private /*@ spec_public @*/ double penetration = 0;
+
+    /*@ public initially contactCount == 0; @*/
+    /*@ public initially restitution == 0; @*/
+    /*@ public initially contactCount == 0; @*/
+    /*@ public initially (\forall int i; 0 <= i && i < contacts.length; contacts[i] != null); @*/
+    /*@ public initially contactNormal != null; @*/
   
     /*@ public invariant A != null; @*/
     /*@ public invariant B != null; @*/

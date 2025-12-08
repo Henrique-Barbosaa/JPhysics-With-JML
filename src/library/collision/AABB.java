@@ -17,6 +17,9 @@ public class AABB {
      */
     private /*@ spec_public non_null @*/ Vectors2D max;
 
+    /*@ public initially max != null; @*/
+    /*@ public initially min != null; @*/
+
     //@ public invariant min != null;
     //@ public invariant max != null;
     //@ public invariant min != max;

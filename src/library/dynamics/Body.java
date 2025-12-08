@@ -34,6 +34,25 @@ public class Body {
     public boolean affectedByGravity;
     public boolean particle;
 
+    /*@ public initially shape != null; @*/
+    /*@ public initially aabb != null; @*/
+    /*@ public initially angularVelocity == 0; @*/
+    /*@ public initially torque == 0; @*/
+    /*@ public initially orientation == 0; @*/
+    /*@ public initially linearDampening == 0; @*/
+    /*@ public initially dynamicFriction == 0.2; @*/
+    /*@ public initially staticFriction == 0.5; @*/
+    /*@ public initially restitution == 0.8; @*/
+    /*@ public initially mass >= 0.0; @*/
+    /*@ public initially I >= 0.0; @*/
+    /*@ public initially invMass >= 0.0; @*/
+    /*@ public initially invI >= 0.0; @*/
+    /*@ public initially particle == false; @*/
+    /*@ public initially affectedByGravity == true; @*/
+    /*@ public initially this.shape.body == this; @*/
+    /*@ public initially velocity.isZero(); @*/
+    /*@ public initially force.isZero(); @*/
+
     /**
      * Constructor for body.
      *
