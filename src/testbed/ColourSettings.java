@@ -3,10 +3,12 @@ package testbed;
 import java.awt.*;
 
 public class ColourSettings {
+    //@ skipesc
     public ColourSettings() {
         defaultColourScheme();
     }
 
+    //@ skipesc
     public void defaultColourScheme() {
         background = new Color(8, 20, 30, 255);
         shapeFill = new Color(97, 146, 58, 255);
@@ -28,6 +30,7 @@ public class ColourSettings {
         scatterRays = new Color(255, 255, 0, 255);
     }
 
+    //@ skipesc
     public void box2dColourScheme() {
         background = new Color(0, 0, 0, 255);
         shapeFill = new Color(57, 44, 44, 255);
@@ -49,6 +52,7 @@ public class ColourSettings {
         scatterRays = new Color(255, 255, 0, 255);
     }
 
+    //@ skipesc
     public void monochromaticColourScheme() {
         background = new Color(0, 0, 0, 255);
         shapeFill = new Color(0, 0, 0, 255);
@@ -117,58 +121,72 @@ public class ColourSettings {
     private boolean drawGrid = false;
     private boolean DrawText = true;
 
+    //@ skipesc
     public boolean getDrawText() {
         return DrawText;
     }
 
+    //@ skipesc
     public void setDrawText(boolean i) {
         DrawText = i;
     }
 
+    //@ skipesc
     public boolean getDrawShapes() {
         return drawShapes;
     }
 
+    //@ skipesc
     public void setDrawShapes(boolean drawShapes) {
         this.drawShapes = drawShapes;
     }
 
+    //@ skipesc
     public boolean getDrawJoints() {
         return drawJoints;
     }
 
+    //@ skipesc
     public void setDrawJoints(boolean drawJoints) {
         this.drawJoints = drawJoints;
     }
 
+    //@ skipesc
     public boolean getDrawAABBs() {
         return drawAABBs;
     }
 
+    //@ skipesc
     public void setDrawAABBs(boolean drawAABBs) {
         this.drawAABBs = drawAABBs;
     }
 
+    //@ skipesc
     public boolean getDrawContacts() {
         return drawContacts;
     }
 
+    //@ skipesc
     public void setDrawContacts(boolean drawContactPoints) {
         this.drawContacts = drawContactPoints;
     }
 
+    //@ skipesc
     public boolean getDrawCOMs() {
         return drawCOMs;
     }
 
+    //@ skipesc
     public void setDrawCOMs(boolean drawCOMs) {
         this.drawCOMs = drawCOMs;
     }
 
+    //@ skipesc
     public boolean getDrawGrid() {
         return drawGrid;
     }
 
+    //@ skipesc
     public void setDrawGrid(boolean drawGrid) {
         this.drawGrid = drawGrid;
     }

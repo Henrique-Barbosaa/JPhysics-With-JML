@@ -43,6 +43,8 @@ public class Body {
      */
     /*@ public normal_behavior
       @   requires shape != null;
+      @   requires shape.orient != null;
+      @   requires shape.orient.row1 != shape.orient.row2;
       @   requires !Double.isNaN(x);
       @   requires !Double.isNaN(y);
       @   requires !Double.isInfinite(x);
@@ -68,7 +70,6 @@ public class Body {
       @   ensures !particle;
       @   ensures affectedByGravity;
       @*/
-    //@skipesc
     public Body(Shapes shape, double x, double y) {
         this.shape = shape;
         this.shape.body = this;
@@ -89,6 +90,8 @@ public class Body {
         angularDampening = 0;
 
         orientation = 0;
+        //@ assume !Double.isInfinite(orientation);
+        //@ assume !Double.isNaN(orientation);
         shape.orient.set(orientation);
 
         this.shape.calcMass(1.0);
@@ -119,7 +122,6 @@ public class Body {
       @   ensures this.force.y == \old(this.force.y+force.y);
       @   ensures torque == \old(this.torque+contactPoint.crossProduct(force));
       @*/
-    //@skipesc
     public void applyForce(Vectors2D force, Vectors2D contactPoint) {
         //@ assume this.force.isValid();
         this.force.add(force);
@@ -142,7 +144,6 @@ public class Body {
       @   ensures this.force.x == \old(this.force.x+force.x);
       @   ensures this.force.y == \old(this.force.y+force.y);
       @*/
-    //@skipesc
     public void applyForceToCentre(Vectors2D force) {
         //@assert !Double.isInfinite(this.force.x + force.x);
         this.force.add(force);
@@ -170,7 +171,6 @@ public class Body {
       @  ensures velocity.x == \old(velocity.x + impulse.scalar(invMass).x);
       @  ensures velocity.y == \old(velocity.y+ impulse.scalar(invMass).y);
       @*/
-    //@skipesc
     public void applyLinearImpulse(Vectors2D impulse, Vectors2D contactPoint) {
         velocity.add(impulse.scalar(invMass));
         angularVelocity += invI * contactPoint.crossProduct(impulse);
@@ -191,7 +191,6 @@ public class Body {
       @   ensures velocity.x == \old(velocity.x+ impulse.scalar(invMass).x);
       @   ensures velocity.y == \old(velocity.y+ impulse.scalar(invMass).y);
       @*/
-    //@skipesc
     public void applyLinearImpulseToCentre(Vectors2D impulse) {
         velocity.add(impulse.scalar(invMass));
     }
@@ -201,14 +200,14 @@ public class Body {
      *
      * @param delta Angle of orientation.
      */
-    //depende de set e portanto terá os mesmos problemas
     /*@ public normal_behavior
       @   requires shape.body == this;
       @   requires !Double.isInfinite(delta);
       @   requires !Double.isNaN(delta);
+      @   requires this.shape.orient.row1 != this.shape.orient.row2;
       @   ensures orientation == delta;
+      @   ensures this.shape.orient.row1 != this.shape.orient.row2;
       @*/
-    //@skipesc
     public void setOrientation(double delta) {
         orientation = delta;
         shape.orient.set(orientation);

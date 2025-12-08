@@ -5,6 +5,8 @@ public class Matrix2D {
     public /*@ non_null @*/ Vectors2D row1 = new Vectors2D();
     public /*@ non_null @*/ Vectors2D row2 = new Vectors2D();
 
+    /*@ public invariant row1 != row2; @*/
+    
     /**
      * Default constructor matrix [(0,0),(0,0)] by default.
      */
@@ -15,7 +17,6 @@ public class Matrix2D {
       @   ensures row2 != null;
       @   pure
       @*/
-    //@skipesc
     public Matrix2D() {
     }
 
@@ -23,8 +24,10 @@ public class Matrix2D {
      * Constructs and sets the matrix up to be a rotation matrix that stores the angle specified in the matrix.
      * @param radians The desired angle of the rotation matrix
      */
-    //@skipesc
-    //ver transpose
+    /*@ public normal_behavior
+      @   requires !Double.isInfinite(radians);
+      @   requires !Double.isNaN(radians);
+      @*/
     public Matrix2D(double radians) {
         this.set(radians);
     }
@@ -37,25 +40,38 @@ public class Matrix2D {
       @   assigns row1.*,row2.*;
       @   requires !Double.isInfinite(radians);
       @   requires !Double.isNaN(radians);
-      @   ensures row1.x == StrictMath.cos(radians);
-      @   ensures row1.y == -StrictMath.sin(radians);
-      @   ensures row2.x == StrictMath.sin(radians);
-      @   ensures row2.y == StrictMath.cos(radians);
+      @   ensures row1.x == Math.cos(radians);
+      @   ensures row1.y == -Math.sin(radians);
+      @   ensures row2.x == Math.sin(radians);
+      @   ensures row2.y == Math.cos(radians);
       @*/
     //ver transpose
-    //@skipesc
     public void set(double radians) {
-        double c = StrictMath.cos(radians);
-        double s = StrictMath.sin(radians);
+        double c = Math.cos(radians);
+        double s = Math.sin(radians);
 
         row1.x = c;
-        //@ assert row1.x == c;
+        //@ assume c == Math.cos(radians);
+        //@ assert row1.x == Math.cos(radians);
+        //@ assume s == Math.sin(radians);
+        //@ assume -s == -Math.sin(radians);
         row1.y = -s;
-        //@ assert row1.x == c;
+        //@ assume -s == -Math.sin(radians);
+        //@ assume c == Math.cos(radians);
+        //@ assert row1.x == Math.cos(radians);
+        //@ assert row1.y == -Math.sin(radians);
         row2.x = s;
-        //@ assert row1.x == c;
+        //@ assume s == Math.sin(radians);
+        //@ assume -s == -Math.sin(radians);
+        //@ assume c == Math.cos(radians);
+        //@ assert row1.x == Math.cos(radians);
+        //@ assert row1.y == -Math.sin(radians);
         row2.y = c;
-        //@ assert row1.x == c;
+        //@ assume -s == -Math.sin(radians);
+        //@ assert row1.y == -s;
+        //@ assume c == Math.cos(radians);
+        //@ assert row1.x == Math.cos(radians);
+        //@ assert row1.y == -Math.sin(radians);
     }
 
     /**
@@ -79,7 +95,6 @@ public class Matrix2D {
     /*@ public normal_behavior
       @   requires row1.isValid() && row2.isValid();
       @*/
-    //@skipesc
     //TODO: adicionar os ensures de igualdade, se o openjml não tiver bugado.
     public Matrix2D transpose() {
         Matrix2D mat = new Matrix2D();
@@ -108,7 +123,6 @@ public class Matrix2D {
       @   ensures \result.y == \old(row2.x * v.x + row2.y * v.y);
       @   ensures \result == v;
       @*/
-    //@skipesc
     public Vectors2D mul(Vectors2D v) {
         double x = v.x;
         double y = v.y;

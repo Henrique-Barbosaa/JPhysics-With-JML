@@ -16,7 +16,6 @@ public class Vectors2D {
       @   ensures this.y == 0;
       @ pure
       @*/
-    //@skipesc
     public Vectors2D() {
         this.x = 0;
         this.y = 0;
@@ -34,7 +33,6 @@ public class Vectors2D {
       @   ensures this.y == y;
       @ pure
       @*/
-    //@skipesc
     public Vectors2D(double x, double y) {
         this.x = x;
         this.y = y;
@@ -52,7 +50,6 @@ public class Vectors2D {
       @   ensures this.y == vector.y;
       @ pure
       @*/
-    //@skipesc
     public Vectors2D(Vectors2D vector) {
         this.x = vector.x;
         this.y = vector.y;
@@ -71,7 +68,6 @@ public class Vectors2D {
       @   ensures -1 <= this.y <= 1;
       @ pure
       @*/
-    //@skipesc
     public Vectors2D(double direction) {
         this.x = Math.cos(direction);
         this.y = Math.sin(direction);
@@ -90,7 +86,6 @@ public class Vectors2D {
       @   ensures this.y == y;
       @   ensures \result == this;
       @*/
-    //@skipesc
     public Vectors2D set(double x, double y) {
         this.x = x;
         this.y = y;
@@ -110,7 +105,6 @@ public class Vectors2D {
       @   ensures this.y == v1.y;
       @   ensures \result == this;
       @*/
-    //@skipesc
     public Vectors2D set(Vectors2D v1) {
         this.x = v1.x;
         this.y = v1.y;
@@ -130,7 +124,6 @@ public class Vectors2D {
       @   ensures \fresh(\result);
       @   spec_pure
       @*/
-    //@skipesc
     public Vectors2D copy() {
         return new Vectors2D(this.x, this.y);
     }
@@ -146,7 +139,6 @@ public class Vectors2D {
       @   ensures this.y == -\old(y);
       @   ensures \result == this;
       @*/
-    //@skipesc
     public Vectors2D negative() {
         this.x = -x;
         this.y = -y;
@@ -164,7 +156,6 @@ public class Vectors2D {
       @   ensures \result.y == -this.y;
       @   spec_pure
       @*/
-    //@skipesc
     public Vectors2D negativeVec() {
         return new Vectors2D(-x, -y);
     }
@@ -216,7 +207,6 @@ public class Vectors2D {
       @   ensures \result.y == this.y + v.y;
       @ spec_pure
       @*/
-    //@skipesc
     public Vectors2D addi(Vectors2D v) {
         return new Vectors2D(x + v.x, y + v.y);
     }
@@ -232,7 +222,6 @@ public class Vectors2D {
       @   ensures \result instanceof Vectors2D;
       @   spec_pure
       @*/
-    //@skipesc
     public Vectors2D normal() {
         return new Vectors2D(-y, x);
     }
@@ -258,7 +247,6 @@ public class Vectors2D {
       @   ensures this.y == \old(y);
       @   ensures \result == this;
       @*/
-    //@skipesc
     public Vectors2D normalize() {
         double d = Math.sqrt(x * x + y * y);
         if (d == 0) {
@@ -289,7 +277,6 @@ public class Vectors2D {
       @   ensures \result.y == \old(y);
       @ spec_pure
       @*/
-    //@skipesc
     //TODO: ajeitar
     public Vectors2D getNormalized() {
         double d = Math.sqrt(x * x + y * y);
@@ -311,7 +298,6 @@ public class Vectors2D {
       @   ensures \result == StrictMath.sqrt((this.x-v.x)*(this.x-v.x)+(this.y-v.y)*(this.y-v.y));
       @   pure
       @*/
-    //@skipesc
     public double distance(Vectors2D v) {
         double dx = this.x - v.x;
         double dy = this.y - v.y;
@@ -334,7 +320,6 @@ public class Vectors2D {
       @   ensures \result.y == this.y-v1.y;
       @   spec_pure
       @*/
-    //@skipesc
     public Vectors2D subtract(Vectors2D v1) {
         return new Vectors2D(this.x - v1.x, this.y - v1.y);
     }
@@ -354,7 +339,6 @@ public class Vectors2D {
       @   ensures \result == this.x*v1.y-this.y*v1.x;
       @   pure
       @*/
-    //@skipesc
     public double crossProduct(Vectors2D v1) {
         return this.x * v1.y - this.y * v1.x;
     }
@@ -364,7 +348,6 @@ public class Vectors2D {
       @   requires !Double.isNaN(a);
       @   ensures \result == this.normal().scalar(a);
       @*/
-    //@skipesc
     public Vectors2D crossProduct(double a) {
         return this.normal().scalar(a);
     }
@@ -376,7 +359,6 @@ public class Vectors2D {
       @   ensures \result.y == this.y*a;
       @   spec_pure
       @*/
-    //@skipesc
     public Vectors2D scalar(double a) {
         return new Vectors2D(x * a, y * a);
     }
@@ -396,7 +378,6 @@ public class Vectors2D {
       @   ensures \result == this.x*v1.x+this.y*v1.y;
       @   pure
       @*/
-    //@skipesc
     public double dotProduct(Vectors2D v1) {
         return v1.x * this.x + v1.y * this.y;
     }
@@ -416,7 +397,6 @@ public class Vectors2D {
           @   ensures Math.isPositiveZero(\result);
           @ pure
           @*/
-    //@skipesc
     public double length() {
             return Math.sqrt(x * x + y * y);
 
@@ -441,7 +421,6 @@ public class Vectors2D {
       @   ensures \result.x == s*a.y;
       @   ensures \result.y == -s*a.x;
       @*/
-    //@skipesc
     public static Vectors2D cross(Vectors2D a, double s) {
         return new Vectors2D(s * a.y, -s * a.x);
     }
@@ -464,7 +443,6 @@ public class Vectors2D {
       @   ensures \result.x == -s*a.y;
       @   ensures \result.y == s*a.x;
       @*/
-    //@skipesc
     public static Vectors2D cross(double s, Vectors2D a) {
         return new Vectors2D(-s * a.y, s * a.x);
     }
@@ -491,7 +469,6 @@ public class Vectors2D {
     //por algum motivo que eu desconheço usar o que tá escrito no return dá erro, e usar Double.isFinite()
     //também, mas se eu jogar a lei de demorgan no return ele começa a funcionar
     //laerte eu não entendi
-    //@skipesc
     public final boolean isValid() {
         return !Double.isNaN(x) && !Double.isInfinite(x) && !Double.isNaN(y) && !Double.isInfinite(y);
     }
@@ -509,7 +486,6 @@ public class Vectors2D {
       @   ensures \result == false;
       @   pure
       @*/
-    //@skipesc
     public boolean isZero() {
         return Math.abs(this.x) == 0 && Math.abs(this.y) == 0;
     }
@@ -526,7 +502,6 @@ public class Vectors2D {
       @   ensures \result != null;
       @   ensures (\forall int k; 0 <= k && k < n; \result[k] != null);
       @*/
-    //@skipesc
     public static Vectors2D[] createArray(int n) {
         Vectors2D[] array = new Vectors2D[n];
         /*@ maintaining 0 <= i && i <= array.length;

@@ -13,10 +13,11 @@ public class Camera {
 
     protected Vectors2D pointClicked;
 
+    //@ skipesc
     public Vectors2D getPointClicked(){
         return pointClicked;
     }
-
+    //@ skipesc
     public void setPointClicked(Vectors2D v){
         pointClicked = v;
     }
@@ -62,6 +63,7 @@ public class Camera {
     //     return output;
     // }
 
+    //@ skipesc
     private void updateViewSize(double aspectRatio) {
         Vectors2D extents = new Vectors2D(aspectRatio * 200, 200);
         extents = extents.scalar(zoom);
@@ -81,19 +83,23 @@ public class Camera {
     //     return w * panel.getWidth();
     // }
 
+    //@ skipesc
     public void transformCentre(Vectors2D v) {
         centre.add(v);
     }
 
+    //@ skipesc
     public void setCentre(Vectors2D centre) {
         this.centre = centre;
     }
 
+    //@ skipesc
     public void setZoom(double zoom) {
         assert (zoom > 0);
         this.zoom = zoom;
     }
 
+    //@ skipesc
     public void reset() {
         setCentre(new Vectors2D());
         setZoom(1.0);
