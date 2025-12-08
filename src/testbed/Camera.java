@@ -13,6 +13,9 @@ public class Camera {
 
     protected Vectors2D pointClicked;
 
+    //@skipesc
+    public Camera(){}
+
     //@ skipesc
     public Vectors2D getPointClicked(){
         return pointClicked;

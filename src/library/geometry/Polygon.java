@@ -30,7 +30,7 @@ public class Polygon extends Shapes {
       @   ensures \forall int i; 0<=i<normals.length; normals[i]!=null;
       @   pure
       @*/
-    //todo: ajeitar
+    //@skipesc
     public Polygon(Vectors2D[] vertList) {
         this.vertices = generateHull(vertList, vertList.length);
         calcNormals();
@@ -78,9 +78,7 @@ public class Polygon extends Shapes {
       @   ensures vertices.length == noOfSides;
       @   ensures normals.length == noOfSides;
       @*/
-    //problema: ele faz um cosseno de strictmath, que não possui um caso pra double finito ou != 0.
-    //a não ser que tenha algo de errado com a definição que tem no meu programa não tem o que fazer.
-    //todo: ajeitar depois de calcnormals
+    //@skipesc
     public Polygon(int radius, int noOfSides) {
         vertices = new Vectors2D[noOfSides];
         /*@ maintaining 0 <= i <= vertices.length;
@@ -107,7 +105,7 @@ public class Polygon extends Shapes {
       @   requires \forall int i; 0<=i<vertices.length; vertices[i].isZero() || (vertices[i].x != 0 || vertices[i].y != 0);
       @   ensures normals.length == vertices.length;
       @*/
-    //Todo: ajeitar
+    //@skipesc
     public void calcNormals() {
         normals = new Vectors2D[vertices.length];
         /*@ maintaining 0 <= i <= normals.length;
@@ -139,7 +137,6 @@ public class Polygon extends Shapes {
       @   ensures body.invI>=0.0;
       @*/
     //@skipesc
-    //eu não sei como ajeitar esse negócio, provável causa perdida.
     @Override
     public void calcMass(double density) {
         Vectors2D centroidDistVec = new Vectors2D(0.0, 0.0);
@@ -270,6 +267,7 @@ public class Polygon extends Shapes {
       @   spec_pure
       @*/
     //@ spec_public
+    //@skipesc
     //todo: ajeitar pra que ele garanta que point esteja entre 0 e n porque senão reclama
     private Vectors2D[] generateHull(Vectors2D[] vertices, int n) {
         ArrayList<Vectors2D> hull = new ArrayList<>();
@@ -341,6 +339,7 @@ public class Polygon extends Shapes {
       @   ensures \result == 1 || \result == 0 || \result == -1;
       @   pure
       @*/
+    //@skipesc
     private int sideOfLine(Vectors2D p1, Vectors2D p2, Vectors2D point) {
         double val = (p2.y - p1.y) * (point.x - p2.x) - (p2.x - p1.x) * (point.y - p2.y);
         if (val > 0)

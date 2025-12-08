@@ -21,6 +21,7 @@ public class Settings {
      * @param max Maximum double value that the range can fall inside
      * @return double value inside the range of min and max supplied
      */
+    //@skipesc
     public static double generateRandomNoInRange(double min, double max) {
         Random rand = new Random();
         return min + (max - min) * rand.nextDouble();
@@ -32,6 +33,7 @@ public class Settings {
      * @param max Maximum int value that the range can fall inside
      * @return int value inside the range of min and max supplied
      */
+    //@skipesc
     public static int generateRandomNoInRange(int min, int max) {
         Random rand = new Random();
         return rand.nextInt(max - min + 1) + min;

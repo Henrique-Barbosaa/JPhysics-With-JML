@@ -1,6 +1,8 @@
 # Compiled class file
 *.class
 
+sources.txt
+
 java
 
 # Log file
