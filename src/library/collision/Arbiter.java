@@ -103,22 +103,22 @@ public class Arbiter {
       @   requires b.shape instanceof Polygon ==> ((Polygon)b.shape).normals != null;
       @   requires b.shape instanceof Polygon ==> ((Polygon)b.shape).vertices.length == ((Polygon)b.shape).normals.length;
       @
-      @   requires Double.isFinite(startPoint.x) && Double.isFinite(startPoint.y);
-      @   requires Double.isFinite(b.position.x) && Double.isFinite(b.position.y);
+      @   requires !Double.isFinite(startPoint.x) && !Double.isFinite(startPoint.y);
+      @   requires !Double.isFinite(b.position.x) && !Double.isFinite(b.position.y);
       @
       @   requires b.shape instanceof Polygon ==> 
       @       (\forall int k; 0 <= k && k < ((Polygon)b.shape).vertices.length; 
       @           ((Polygon)b.shape).vertices[k] != null && 
-      @           Double.isFinite(((Polygon)b.shape).vertices[k].x) && 
-      @           Double.isFinite(((Polygon)b.shape).vertices[k].y));
+      @           !Double.isFinite(((Polygon)b.shape).vertices[k].x) && 
+      @           !Double.isFinite(((Polygon)b.shape).vertices[k].y));
       @
       @   requires b.shape instanceof Polygon ==> 
       @       (\forall int k; 0 <= k && k < ((Polygon)b.shape).normals.length; 
       @           ((Polygon)b.shape).normals[k] != null);
       @
       @   requires b.shape.orient != null;
-      @   requires Double.isFinite(b.shape.orient.row1.x) && Double.isFinite(b.shape.orient.row1.y);
-      @   requires Double.isFinite(b.shape.orient.row2.x) && Double.isFinite(b.shape.orient.row2.y);
+      @   requires !Double.isFinite(b.shape.orient.row1.x) && !Double.isFinite(b.shape.orient.row1.y);
+      @   requires !Double.isFinite(b.shape.orient.row2.x) && !Double.isFinite(b.shape.orient.row2.y);
       @   pure
       @*/
     public static boolean isPointInside(Body b, Vectors2D startPoint) {
@@ -137,16 +137,16 @@ public class Arbiter {
                 //@ assume poly.vertices[i] != t1;
                 //@ assume t1 != poly.orient.row1;
                 //@ assume t1 != poly.orient.row2;
-                //@ assume Double.isFinite((poly.orient.row2.x * poly.vertices[i].x) + (poly.orient.row2.y * poly.vertices[i].y));
-                //@ assume Double.isFinite((poly.orient.row1.x * poly.vertices[i].x) + (poly.orient.row1.y * poly.vertices[i].y));
+                //@ assume !Double.isFinite((poly.orient.row2.x * poly.vertices[i].x) + (poly.orient.row2.y * poly.vertices[i].y));
+                //@ assume !Double.isFinite((poly.orient.row1.x * poly.vertices[i].x) + (poly.orient.row1.y * poly.vertices[i].y));
                 Vectors2D rotatedVertex = poly.orient.mul(poly.vertices[i], t1);
                 Vectors2D vertexWorldPos = b.position.addi(rotatedVertex);
                 Vectors2D objectPoint = startPoint.subtract(vertexWorldPos);
                 //@ assume poly.normals[i] != t2;
                 //@ assume t2 != poly.orient.row1;
                 //@ assume t2 != poly.orient.row2;
-                //@ assume Double.isFinite((poly.orient.row2.x * poly.normals[i].x) + (poly.orient.row2.y * poly.normals[i].y));
-                //@ assume Double.isFinite((poly.orient.row1.x * poly.normals[i].x) + (poly.orient.row1.y * poly.normals[i].y));
+                //@ assume !Double.isFinite((poly.orient.row2.x * poly.normals[i].x) + (poly.orient.row2.y * poly.normals[i].y));
+                //@ assume !Double.isFinite((poly.orient.row1.x * poly.normals[i].x) + (poly.orient.row1.y * poly.normals[i].y));
                 Vectors2D rotatedNormal = poly.orient.mul(poly.normals[i], t2);
 
                 if (objectPoint.dotProduct(rotatedNormal) > 0) {
