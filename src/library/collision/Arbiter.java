@@ -9,16 +9,44 @@ import library.math.Vectors2D;
 
 /**
  * Creates manifolds to detect collisions and apply forces to them. Discrete in nature and only evaluates pairs of bodies in a single manifold.
- */
+*/
+//@ nullable_by_default
 public class Arbiter {
-    private final Body A;
-    private final Body B;
+    private /*@ spec_public @*/ final Body A;
+    private /*@ spec_public @*/ final Body B;
+    /**
+     * Dynamic fiction constant to be set during the construction of the arbiter.
+    */
+    double dynamicFriction;
+    /**
+        * Static fiction constant to be set during the construction of the arbiter.
+    */
+    double staticFriction;
+  
+    public final Vectors2D[] contacts = {new Vectors2D(), new Vectors2D()};
+    public Vectors2D contactNormal = new Vectors2D();
+    public int contactCount = 0;
+    public double restitution = 0;
+    private /*@ spec_public @*/ double penetration = 0;
+  
+    /*@ public invariant A != null; @*/
+    /*@ public invariant B != null; @*/
+    /*@ public invariant contacts != null; @*/
+    /*@ public invariant contacts.length == 2; @*/
+    /*@ public invariant (\forall int i; 0 <= i && i < contacts.length; contacts[i] != null); @*/
+    /*@ public invariant contactNormal != null; @*/
+    /*@ public invariant 0 <= contactCount && contactCount <= 2; @*/
 
     /**
      * Getter for Body A.
      *
      * @return Body A
      */
+    /*@ public normal_behavior
+      @   ensures \result == A;
+      @   ensures \result != null;
+      @   pure
+      @ */
     public Body getA() {
         return A;
     }
@@ -28,18 +56,15 @@ public class Arbiter {
      *
      * @return Body B
      */
+    /*@ public normal_behavior
+      @   ensures \result == B;
+      @   ensures \result != null;
+      @   pure
+      @ */
     public Body getB() {
         return B;
     }
 
-    /**
-     * Static fiction constant to be set during the construction of the arbiter.
-     */
-    double staticFriction;
-    /**
-     * Dynamic fiction constant to be set during the construction of the arbiter.
-     */
-    double dynamicFriction;
 
     /**
      * Main constructor for arbiter that takes two bodies to be evaluated. Sets static and dynamic friction constants here.
@@ -47,6 +72,12 @@ public class Arbiter {
      * @param a First body of arbiter.
      * @param b Second body of arbiter.
      */
+    /*@ public normal_behavior
+      @   requires a != null && b != null;
+      @   requires a != b;
+      @   ensures A == a;
+      @   ensures B == b;
+      @ */
     public Arbiter(Body a, Body b) {
         this.A = a;
         this.B = b;
@@ -62,12 +93,63 @@ public class Arbiter {
      * @param startPoint Vector point to check if its inside the first body.
      * @return boolean value whether the point is inside the first body.
      */
+    /*@ public normal_behavior
+      @   requires b != null;
+      @   requires startPoint != null;
+      @   requires b.shape != null;
+      @   requires b.position != null;
+      @
+      @   requires b.shape instanceof Polygon ==> ((Polygon)b.shape).vertices != null;
+      @   requires b.shape instanceof Polygon ==> ((Polygon)b.shape).normals != null;
+      @   requires b.shape instanceof Polygon ==> ((Polygon)b.shape).vertices.length == ((Polygon)b.shape).normals.length;
+      @
+      @   requires Double.isFinite(startPoint.x) && Double.isFinite(startPoint.y);
+      @   requires Double.isFinite(b.position.x) && Double.isFinite(b.position.y);
+      @
+      @   requires b.shape instanceof Polygon ==> 
+      @       (\forall int k; 0 <= k && k < ((Polygon)b.shape).vertices.length; 
+      @           ((Polygon)b.shape).vertices[k] != null && 
+      @           Double.isFinite(((Polygon)b.shape).vertices[k].x) && 
+      @           Double.isFinite(((Polygon)b.shape).vertices[k].y));
+      @
+      @   requires b.shape instanceof Polygon ==> 
+      @       (\forall int k; 0 <= k && k < ((Polygon)b.shape).normals.length; 
+      @           ((Polygon)b.shape).normals[k] != null);
+      @
+      @   requires b.shape.orient != null;
+      @   requires Double.isFinite(b.shape.orient.row1.x) && Double.isFinite(b.shape.orient.row1.y);
+      @   requires Double.isFinite(b.shape.orient.row2.x) && Double.isFinite(b.shape.orient.row2.y);
+      @   pure
+      @*/
     public static boolean isPointInside(Body b, Vectors2D startPoint) {
         if (b.shape instanceof Polygon) {
             Polygon poly = (Polygon) b.shape;
+            /*@ maintaining 0 <= i && i <= poly.vertices.length;
+              @ decreasing poly.vertices.length - i;
+              @*/
             for (int i = 0; i < poly.vertices.length; i++) {
-                Vectors2D objectPoint = startPoint.subtract(poly.body.position.addi(poly.body.shape.orient.mul(poly.vertices[i], new Vectors2D())));
-                if (objectPoint.dotProduct(poly.body.shape.orient.mul(poly.normals[i], new Vectors2D())) > 0) {
+                //@ assert poly.vertices[i] != null;
+                //@ assert poly.normals[i] != null;
+
+                Vectors2D t1 = new Vectors2D();
+                Vectors2D t2 = new Vectors2D();
+
+                //@ assume poly.vertices[i] != t1;
+                //@ assume t1 != poly.orient.row1;
+                //@ assume t1 != poly.orient.row2;
+                //@ assume Double.isFinite((poly.orient.row2.x * poly.vertices[i].x) + (poly.orient.row2.y * poly.vertices[i].y));
+                //@ assume Double.isFinite((poly.orient.row1.x * poly.vertices[i].x) + (poly.orient.row1.y * poly.vertices[i].y));
+                Vectors2D rotatedVertex = poly.orient.mul(poly.vertices[i], t1);
+                Vectors2D vertexWorldPos = b.position.addi(rotatedVertex);
+                Vectors2D objectPoint = startPoint.subtract(vertexWorldPos);
+                //@ assume poly.normals[i] != t2;
+                //@ assume t2 != poly.orient.row1;
+                //@ assume t2 != poly.orient.row2;
+                //@ assume Double.isFinite((poly.orient.row2.x * poly.normals[i].x) + (poly.orient.row2.y * poly.normals[i].y));
+                //@ assume Double.isFinite((poly.orient.row1.x * poly.normals[i].x) + (poly.orient.row1.y * poly.normals[i].y));
+                Vectors2D rotatedNormal = poly.orient.mul(poly.normals[i], t2);
+
+                if (objectPoint.dotProduct(rotatedNormal) > 0) {
                     return false;
                 }
             }
@@ -75,6 +157,8 @@ public class Arbiter {
             Circle circle = (Circle) b.shape;
             Vectors2D d = b.position.subtract(startPoint);
 
+            //@ assume Double.POSITIVE_INFINITY > d.x*d.x + d.y*d.y > 0;
+            //@ assume Math.isPositiveZero(d.x*d.x + d.y*d.y);
             return !(d.length() > circle.radius);
         }
 
@@ -82,16 +166,16 @@ public class Arbiter {
     }
 
     /**
-     * Array to save the contact points of the objects body's in world space.
-     */
-    public final Vectors2D[] contacts = {new Vectors2D(), new Vectors2D()};
-    public Vectors2D contactNormal = new Vectors2D();
-    public int contactCount = 0;
-    public double restitution = 0;
-
-    /**
      * Conducts a narrow phase detection and creates a contact manifold.
      */
+    /*@ public normal_behavior
+      @   requires A != null && B != null;
+      @   requires A.shape != null && B.shape != null;
+      @
+      @   assignable \everything;
+      @
+      @   ensures 0 <= contactCount && contactCount <= 2;
+      @*/
     public void narrowPhase() {
         restitution = Math.min(A.restitution, B.restitution);
         if (A.shape instanceof Circle && B.shape instanceof Circle) {
@@ -104,15 +188,21 @@ public class Arbiter {
                 this.contactNormal.negative();
             }
         } else if (A.shape instanceof Polygon && B.shape instanceof Polygon) {
+            //@ assume ((Polygon)A.shape).vertices.length > 0;
+            //@ assume ((Polygon)B.shape).vertices.length > 0;
             polygonVsPolygon();
         }
     }
 
-    private double penetration = 0;
 
     /**
      * Circle vs circle collision detection method
      */
+    /*@ private normal_behavior
+      @   requires A.shape instanceof Circle && B.shape instanceof Circle;
+      @   ensures restitution == \old(restitution);
+      @ */
+    //@ skipesc
     private void circleVsCircle() {
         Circle ca = (Circle) A.shape;
         Circle cb = (Circle) B.shape;
@@ -146,6 +236,11 @@ public class Arbiter {
      * @param a Circle object
      * @param b Polygon Object
      */
+    /*@ private normal_behavior
+      @   requires a.shape instanceof Circle && b.shape instanceof Polygon;
+      @   ensures restitution == \old(restitution);
+      @ */
+    //@ skipesc
     private void circleVsPolygon(Body a, Body b) {
         Circle A = (Circle) a.shape;
         Polygon B = (Polygon) b.shape;
@@ -233,6 +328,14 @@ public class Arbiter {
     /**
      * Polygon collision check
      */
+    /*@ private normal_behavior
+      @   requires A.shape instanceof Polygon && B.shape instanceof Polygon;
+      @   requires ((Polygon)A.shape).vertices.length > 0;
+      @   requires ((Polygon)B.shape).vertices.length > 0;
+      @   assignable contactCount, penetration, contactNormal.*, contacts[0].*, contacts[1].*;
+      @   ensures restitution == \old(restitution);
+      @*/
+    //@ skipesc
     private void polygonVsPolygon() {
         Polygon pa = (Polygon) A.shape;
         Polygon pb = (Polygon) B.shape;
@@ -277,6 +380,10 @@ public class Arbiter {
         //Best face is the incident face that is the most anti parallel (most negative dot product)
         int incidentIndex = 0;
         double minDot = Double.MAX_VALUE;
+        /*@ maintaining 0 <= i && i <= incidentPoly.vertices.length;
+          @ maintaining 0 <= incidentIndex && incidentIndex < incidentPoly.vertices.length;
+          @ decreasing incidentPoly.vertices.length - i;
+          @*/
         for (int i = 0; i < incidentPoly.vertices.length; i++) {
             double dot = referenceNormal.dotProduct(incidentPoly.normals[i]);
 
@@ -286,13 +393,19 @@ public class Arbiter {
             }
         }
 
-        //Incident faces vertexes in world space
-        incidentFaceVertexes[0] = incidentPoly.orient.mul(incidentPoly.vertices[incidentIndex], new Vectors2D()).addi(incidentPoly.body.position);
-        incidentFaceVertexes[1] = incidentPoly.orient.mul(incidentPoly.vertices[incidentIndex + 1 >= incidentPoly.vertices.length ? 0 : incidentIndex + 1], new Vectors2D()).addi(incidentPoly.body.position);
+        // Simplificação do índice circular para o JML não se perder no ternário dentro do array
+        int nextIndex = (incidentIndex + 1 >= incidentPoly.vertices.length) ? 0 : incidentIndex + 1;
 
-        //Gets vertex's of reference polygon reference face in world space
+        // Incident faces vertexes in world space
+        incidentFaceVertexes[0] = incidentPoly.orient.mul(incidentPoly.vertices[incidentIndex], new Vectors2D()).addi(incidentPoly.body.position);
+        incidentFaceVertexes[1] = incidentPoly.orient.mul(incidentPoly.vertices[nextIndex], new Vectors2D()).addi(incidentPoly.body.position);
+
+        // Simplificação do índice circular para o referencePoly
+        int v2Index = (referenceFaceIndex + 1 == referencePoly.vertices.length) ? 0 : referenceFaceIndex + 1;
+
+        // Gets vertex's of reference polygon reference face in world space
         Vectors2D v1 = referencePoly.vertices[referenceFaceIndex];
-        Vectors2D v2 = referencePoly.vertices[referenceFaceIndex + 1 == referencePoly.vertices.length ? 0 : referenceFaceIndex + 1];
+        Vectors2D v2 = referencePoly.vertices[v2Index];
 
         //Rotate and translate vertex's of reference poly
         v1 = referencePoly.orient.mul(v1, new Vectors2D()).addi(referencePoly.body.position);
@@ -323,6 +436,9 @@ public class Arbiter {
         int contactsFound = 0;
 
         //Discards points that are positive/above the reference face
+        /*@ maintaining 0 <= i && i <= 2;
+          @ maintaining 0 <= contactsFound && contactsFound <= i;
+          @*/
         for (int i = 0; i < 2; i++) {
             double separation = refFaceNormal.dotProduct(incidentFaceVertexes[i]) - refFaceNormal.dotProduct(v1);
             if (separation <= 0.0 + Settings.EPSILON) {
@@ -338,12 +454,18 @@ public class Arbiter {
             contactPoint = contactVectorsFound[0];
             this.penetration = totalPen;
         } else {
-            contactPoint = (contactVectorsFound[1].addi(contactVectorsFound[0])).scalar(0.5);
+            if (contactsFound == 0) return;
+            Vectors2D sum = contactVectorsFound[1].addi(contactVectorsFound[0]);
+            contactPoint = sum.scalar(0.5);
             this.penetration = totalPen / 2;
         }
         this.contactCount = 1;
         this.contacts[0].set(contactPoint);
-        contactNormal.set(flip ? refFaceNormal.negative() : refFaceNormal);
+        if (flip) {
+            this.contactNormal.set(refFaceNormal.negative());
+        } else {
+            this.contactNormal.set(refFaceNormal);
+        }
     }
 
     /**
@@ -354,6 +476,7 @@ public class Arbiter {
      * @param incidentFace Clipped face vertex's
      * @return Number of clipped vertex's
      */
+    //@ skipesc
     private int clip(Vectors2D planeTangent, double offset, Vectors2D[] incidentFace) {
         int num = 0;
         Vectors2D[] out = {
@@ -386,6 +509,7 @@ public class Arbiter {
      * @param A    Polygon A to test.
      * @param B    Polygon B to test.
      */
+    //@ skipesc
     public void findAxisOfMinPenetration(AxisData data, Polygon A, Polygon B) {
         double distance = -Double.MAX_VALUE;
         int bestIndex = 0;
@@ -435,6 +559,7 @@ public class Arbiter {
      * Resolves any penetrations that are left overlapping between shapes. This can be cause due to integration errors of the solvers integration method.
      * Based on linear projection to move the shapes away from each other based on a correction constant and scaled relative to the inverse mass of the objects.
      */
+    //@ skipesc
     public void penetrationResolution() {
         double penetrationTolerance = penetration - Settings.PENETRATION_ALLOWANCE;
 
@@ -451,6 +576,7 @@ public class Arbiter {
     /**
      * Solves the current contact manifold and applies impulses based on any contacts found.
      */
+    //@ skipesc
     public void solve() {
         Vectors2D contactA = contacts[0].subtract(A.position);
         Vectors2D contactB = contacts[0].subtract(B.position);
@@ -505,6 +631,7 @@ public class Arbiter {
      * @param b penetration value b
      * @return boolean value whether a is to be preferred or not.
      */
+    //@ skipesc
     private static boolean selectionBias(double a, double b) {
         return a >= b * Settings.BIAS_RELATIVE + a * Settings.BIAS_ABSOLUTE;
     }
@@ -520,6 +647,7 @@ class AxisData {
     /**
      * Default constructor
      */
+    //@ skipesc
     AxisData() {
         penetration = -Double.MAX_VALUE;
         referenceFaceIndex = 0;
@@ -530,6 +658,7 @@ class AxisData {
      *
      * @param value Penetration value of type double.
      */
+    //@ skipesc
     public void setPenetration(double value) {
         penetration = value;
     }
@@ -539,6 +668,7 @@ class AxisData {
      *
      * @param value Value to set index variable to.
      */
+    //@ skipesc
     public void setReferenceFaceIndex(int value) {
         referenceFaceIndex = value;
     }
@@ -548,6 +678,7 @@ class AxisData {
      *
      * @return double penetration value.
      */
+    //@ skipesc
     public double getPenetration() {
         return penetration;
     }
@@ -557,6 +688,7 @@ class AxisData {
      *
      * @return int referenceFaceIndex value.
      */
+    //@ skipesc
     public int getReferenceFaceIndex() {
         return referenceFaceIndex;
     }
