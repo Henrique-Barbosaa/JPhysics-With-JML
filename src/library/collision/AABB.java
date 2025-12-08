@@ -155,9 +155,17 @@ public class AABB {
       @   requires offset != null;
       @   requires offset != min;
       @   requires offset != max;
-      @   requires Double.isFinite(offset.x) && Double.isFinite(offset.y);
-      @   requires Double.isFinite(min.x + offset.x) && Double.isFinite(min.y + offset.y);
-      @   requires Double.isFinite(max.x + offset.x) && Double.isFinite(max.y + offset.y);
+      @   requires !Double.isInfinite(min.x + offset.x);
+      @   requires !Double.isInfinite(min.y + offset.y);
+      @   requires !Double.isInfinite(max.x + offset.x);
+      @   requires !Double.isInfinite(max.y + offset.y);
+      @   requires !Double.isNaN(min.x + offset.x);
+      @   requires !Double.isNaN(min.y + offset.y);
+      @   requires !Double.isNaN(max.x + offset.x);
+      @   requires !Double.isNaN(max.y + offset.y);
+      @   requires !Double.isFinite(offset.x) && !Double.isFinite(offset.y);
+      @   requires !Double.isFinite(min.x + offset.x) && !Double.isFinite(min.y + offset.y);
+      @   requires !Double.isFinite(max.x + offset.x) && !Double.isFinite(max.y + offset.y);
       @   assignable min.x, min.y, max.x, max.y;
       @
       @   ensures this.min.x == \old(this.min.x + offset.x);
@@ -210,8 +218,8 @@ public class AABB {
       @   requires A.aabb != null && A.position != null;
       @   requires B.aabb != null && B.position != null;
       @
-      @   requires Double.isFinite(A.position.x) && Double.isFinite(A.position.y);
-      @   requires Double.isFinite(B.position.x) && Double.isFinite(B.position.y);
+      @   requires !Double.isFinite(A.position.x) && !Double.isFinite(A.position.y);
+      @   requires !Double.isFinite(B.position.x) && !Double.isFinite(B.position.y);
       @
       @   requires A.aabb.min != null && A.aabb.max != null;
       @   requires A.aabb.min != A.aabb.max;
