@@ -39,6 +39,7 @@ public abstract class Shapes {
      */
     /*@ public normal_behavior
       @   assigns body.mass, body.I, body.invMass, body.invI;
+      @   requires body != null;
       @   requires density > 0.0;
       @   ensures body.mass >= 0.0;
       @   ensures body.I >= 0.0;
