@@ -126,13 +126,13 @@ public class Polygon extends Shapes {
     /*@ also public normal_behavior
       @   assigns body.mass, body.I, body.invMass, body.invI;
       @   requires Double.isFinite(density);
-      @   requires density>0;
+      @   requires density>0.0;
       @   requires body != null;
       @   requires \forall int i; 0<=i<vertices.length; vertices[i].isValid();
-      @   ensures body.mass>=0;
-      @   ensures body.invMass>=0;
-      @   ensures body.I>=0;
-      @   ensures body.invI>=0;
+      @   ensures body.mass>=0.0;
+      @   ensures body.invMass>=0.0;
+      @   ensures body.I>=0.0;
+      @   ensures body.invI>=0.0;
       @*/
     //@skipesc
     //eu não sei como ajeitar esse negócio, provável causa perdida.
@@ -184,13 +184,6 @@ public class Polygon extends Shapes {
     /**
      * Generates an AABB encompassing the polygon and binds it to the body.
      */
-    /*@ also public normal_behavior
-      @   assigns body.aabb, body.aabb.*;
-      @   requires body != null;
-      @   ensures body.aabb != null;
-      @   ensures body.aabb.min != null;
-      @   ensures body.aabb.max != null;
-      @*/
     //@skipesc
     @Override
     public void createAABB() {

@@ -37,11 +37,26 @@ public abstract class Shapes {
      *
      * @param density The desired density to factor into the calculation.
      */
+    /*@   assigns body.mass, body.I, body.invMass, body.invI;
+      @   requires body != null;
+      @   requires density > 0.0;
+      @   ensures body.mass >= 0.0;
+      @   ensures body.I >= 0.0;
+      @   ensures body.invMass >= 0.0;
+      @   ensures body.invI >= 0.0;
+      @*/
     public abstract void calcMass(double density);
 
     /**
      * Generates an AABB for the shape.
      */
+    /*@ public normal_behavior
+      @   requires body != null;
+      @   assigns body.aabb, body.aabb.*;
+      @   ensures body.aabb != null;
+      @   ensures body.aabb.min != null;
+      @   ensures body.aabb.max != null;
+      @*/
     public abstract void createAABB();
 
     /**
