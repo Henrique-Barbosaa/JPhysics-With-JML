@@ -106,16 +106,6 @@ public class Arbiter {
       @   requires !Double.isFinite(startPoint.x) && !Double.isFinite(startPoint.y);
       @   requires !Double.isFinite(b.position.x) && !Double.isFinite(b.position.y);
       @
-      @   requires b.shape instanceof Polygon ==> 
-      @       (\forall int k; 0 <= k && k < ((Polygon)b.shape).vertices.length; 
-      @           ((Polygon)b.shape).vertices[k] != null && 
-      @           !Double.isFinite(((Polygon)b.shape).vertices[k].x) && 
-      @           !Double.isFinite(((Polygon)b.shape).vertices[k].y));
-      @
-      @   requires b.shape instanceof Polygon ==> 
-      @       (\forall int k; 0 <= k && k < ((Polygon)b.shape).normals.length; 
-      @           ((Polygon)b.shape).normals[k] != null);
-      @
       @   requires b.shape.orient != null;
       @   requires !Double.isFinite(b.shape.orient.row1.x) && !Double.isFinite(b.shape.orient.row1.y);
       @   requires !Double.isFinite(b.shape.orient.row2.x) && !Double.isFinite(b.shape.orient.row2.y);
